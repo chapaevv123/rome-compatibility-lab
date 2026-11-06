@@ -1,25 +1,17 @@
-# Rome Compatibility Lab v2 — 2–3 minute narration
+# Rome Compatibility Lab 2.0 — final 2:40 demo outline
 
-**0:00–0:25 — Problem.** “Solidity code can compile and still rely on Ethereum behavior that Rome handles differently. Rome developers need a source-level preflight and evidence that keeps static findings separate from actual execution.”
+**0:00–0:20 — Problem.** Solidity that compiles can still assume EVM behavior that differs on Rome. Introduce source checks and evidence states.
 
-**0:25–0:55 — Scan.** Open Scan Solidity, select `CpiEmptyAccounts.sol` and a new file using `selfdestruct` or `address(5).staticcall`. Run the scan. Show file/line, severity, confidence, primary source and remediation. Explain that stipend warnings need runtime verification.
+**0:20–0:50 — Scan.** Open `/scan`, scan the supplied Solidity examples, and show line, severity, confidence, source and remediation.
 
-**0:55–1:25 — Execution.** Open EVM vs Rome. Show four actual local runs: arithmetic, origin, event/block context and state increment. Open the JSON ledger and rerun `npm run evm:local`. Point out source and bytecode hashes and that Hadrian is NOT_EXECUTED.
+**0:50–1:10 — Local EVM.** Open `/cross-vm` and the four historical local executions. Point out that their original Hadrian column reflects the earlier local run, while newer on-chain cases are separate.
 
-**1:25–1:50 — CPI.** Open CPI Lab and compile `npm run cpi:prepare`. Show the official Rome Solidity interface, Memo program ID from registry v0.3.0 and read-only deployment estimate. State clearly: “This proves compilation and deployment estimation only; no successful CPI has been observed.”
+**1:10–1:35 — LaneProbe.** In `/evidence`, open the [deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x76d3a3383926b2d0e6c7953fd28c1a3472ef655a3d5ad9c046b383428ae58004) and [observe()](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xdcf513ed4e530c8eeb21b6d86157b7e2066f0905d8ffe16504d6feef05b6467f) cases. Show receipt, `Observed` event and `caller()` readback.
 
-**1:50–2:15 — Regression and evidence.** Compare two local execution ledgers in History, then show Evidence Explorer. Explain why missing Hadrian receipts are inconclusive and why EVM gas is never equated to Solana CU.
+**1:35–2:05 — CPI Memo.** Show [CpiMemoProbe deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xac5555d6a67f9995b215ed0e473c6c2cc4bde61149acad239b0714a20a19e946), `memoProgram()` readback and the separate [invokeMemo() EVM receipt](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x89c4c377b49d24d2aeb9753747505bd3d452703eab305d715da490b297e41845).
 
-**2:15–2:40 — Reproduce and next milestone.** Show `npm test`, `npm run network:check` and the read-only dry-run command. Explain that a funded, approved burner wallet run will provide receipts, events, state readback, explorer and Solana settlement evidence. Do not show a fabricated transaction.
+**2:05–2:25 — Solana settlement.** Open the [mapped Solana transaction](https://explorer.solana.com/tx/5csdQGcbiKbRYpjyn14uaTLHanmZk6jLNdUjaPVdmTHiPWK14dMKWFqyT5AoLqj2i2jfQuf3F1WcZvzQNm7pwiCg?cluster=devnet). Show finalized status, inner Memo instruction, exact `Rome Compatibility Lab CPI-MEMO-01` payload and success logs. Use the case-sensitive signature returned by Hadrian RPC.
 
-## Application text
+**2:25–2:40 — Reproduce.** Show the recorded JSON and `npm run evidence:verify`. Explain that Evidence Explorer rechecks public RPC data on reload and that the completed MetaMask page has no send buttons.
 
-**Product pitch:** Rome Compatibility Lab is a source-aware Solidity preflight and execution evidence workbench for teams bringing contracts to Rome.
-
-**Technical overview:** Versioned AST rules identify documented Rome constraints with exact file and line references. Four checked-in probes compile and execute in a local EVM. A portable ledger records hashes, return values, events and state, while differential and regression engines keep unexecuted Hadrian cases explicit.
-
-**Architecture summary:** Browser-local scans protect source privacy and server capacity. A CLI handles project files. Hash-checked compiler artifacts, registry v0.3.0, official Rome Solidity ABI and read-only Hadrian diagnostics support reproducibility. Signed transactions require a separate reviewed burner workflow.
-
-**Builder application:** We are building a developer tool for Rome builders to review source assumptions, reproduce local behavior and collect chain evidence. The public demo currently demonstrates static scanning and local evidence. Hadrian execution and CPI are prepared but unverified; contract addresses will be added only after real testnet receipts.
-
-**Grant rationale:** Funding would support robust Hadrian/CPI test infrastructure, richer rule coverage, chain-backed regression runs and public reproduction guides. A grant is discretionary; no grant or Arena outcome is claimed.
+Record the video only after the v2 production site passes public smoke checks. No grant, award or Builder Program endorsement is claimed.

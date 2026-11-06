@@ -17,7 +17,7 @@ npm.cmd audit
 npm.cmd audit --omit=dev
 ```
 
-`evidence/local-execution.json` contains four actual in-memory EVM runs. They are local behavior evidence only. The Hadrian side is NOT_EXECUTED. The regression tests use synthetic records to test classification logic; they do not represent chain transactions.
+`evidence/local-execution.json` contains four actual in-memory EVM runs. This is a historical local snapshot; its Hadrian side was NOT_EXECUTED at the time. Later live transactions are recorded separately in `evidence/hadrian-live.json` and rechecked with `npm run evidence:verify`. The regression tests use synthetic records to test classification logic; they do not represent chain transactions.
 
 Fresh result after v2 continuation: clean `npm ci` PASS; 35 tests PASS, including import resolution, official SDK write policy and burner approval adapter; typecheck and strict TS lint PASS; four local EVM scenarios PASS; production build PASS; six Playwright E2E PASS against production server; full and production-only npm audit both 0 vulnerabilities. CLI scan, identical scan comparison, and execution-ledger comparison ran successfully. Comparing the local ledger with itself produces four INCONCLUSIVE Hadrian entries as intended.
 

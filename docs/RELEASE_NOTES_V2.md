@@ -1,12 +1,12 @@
-# v2 review branch release notes
+# Rome Compatibility Lab 2.0 — release candidate
 
-- Upgraded official Rome registry from v0.1.0 to the latest observed tag v0.3.0.
-- Added focused static rules for disabled SELFDESTRUCT, literal modexp calls and gas-stipend review, with scoped documented suppression.
-- Added four real local EVM probe executions and a portable evidence ledger.
-- Added differential and execution-regression classifiers; Hadrian remains NOT_EXECUTED.
-- Added CPI probe compilation against the official Rome Solidity MIT interface.
-- Added a fixed official Rome SDK v0.4.0 `submitRomeTx` module, approval-limited burner adapter, and read-only receipt verifier; no signed path has run.
-- Added relative-import presence checks, project-folder scan, local source pages and an interactive reviewer walkthrough.
-- Added Hadrian, CPI and expanded evidence screens; kept public API read-only/fail-closed.
+- Source-aware Solidity scan, local EVM evidence and regression comparison remain reproducible.
+- LaneProbe deployment and `observe()` are verified on Rome Hadrian, chain ID 200010.
+- CpiMemoProbe deployment and `invokeMemo()` have verified EVM receipts, code and readback.
+- The mapped Solana Devnet transaction is finalized and includes the expected successful inner Memo instruction and `Rome Compatibility Lab CPI-MEMO-01` payload.
+- Evidence Explorer includes four public EVM cases and the Solana settlement, with a recorded JSON snapshot and fresh RPC checks on page load.
+- The completed MetaMask workflow is read-only to prevent repeat transactions.
 
-Review status: no Hadrian transaction, CPI receipt, Solana-side evidence or video recording yet. Production deployment is pending owner approval.
+Machine-verifiable evidence: `evidence/hadrian-live.json`; reproduce with `npm run evidence:verify`.
+
+Release status: local release candidate. GitHub push, production deployment and public smoke checks require separate owner approval.

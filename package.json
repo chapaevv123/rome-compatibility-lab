@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --require ./scripts/tsx-userinfo.cjs --import tsx --test tests/scanner.test.ts tests/github.test.ts tests/security.test.ts tests/differential.test.ts tests/regression.test.ts tests/rome-sdk-write.test.ts tests/rome-provider.test.ts",
+    "test": "node --require ./scripts/tsx-userinfo.cjs --import tsx --test tests/scanner.test.ts tests/github.test.ts tests/security.test.ts tests/differential.test.ts tests/regression.test.ts tests/rome-sdk-write.test.ts tests/rome-provider.test.ts tests/metamask-lane.test.ts tests/metamask-operations.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit --noUnusedLocals --noUnusedParameters",
     "cli": "node --require ./scripts/tsx-userinfo.cjs --import tsx cli/index.ts",
@@ -18,6 +18,7 @@
     "hadrian:dry-run": "node --require ./scripts/tsx-userinfo.cjs --import tsx scripts/dry-run-hadrian.ts",
     "hadrian:deploy": "node --require ./scripts/tsx-userinfo.cjs --import tsx scripts/deploy-hadrian.ts",
     "hadrian:verify": "node --require ./scripts/tsx-userinfo.cjs --import tsx scripts/verify-hadrian.ts",
+    "evidence:verify": "node --require ./scripts/tsx-userinfo.cjs --import tsx scripts/verify-release-evidence.ts",
     "screenshots": "node scripts/capture-screenshots.mjs",
     "test:e2e": "playwright test"
   },

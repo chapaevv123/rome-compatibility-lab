@@ -1,6 +1,6 @@
-# Rome Compatibility Lab — v2 review branch
+# Rome Compatibility Lab — v2 release candidate
 
-This branch adds four **real local EVM executions**, source/bytecode-hashed evidence, focused Rome rules, and prepared Hadrian/CPI probes. **No Hadrian transaction or CPI success is claimed.** Production Vercel still serves the earlier approved version until the owner authorizes a release. See [v2 report](ROME_COMPATIBILITY_LAB_V2_REPORT_RU.md), [behavior matrix](docs/ROME_BEHAVIOR_MATRIX.md), [architecture](docs/ARCHITECTURE_V2.md), and [test evidence](docs/TEST_EVIDENCE_V2.md).
+This is the local v2 release candidate. It includes four historical local EVM executions, four verified Hadrian transactions, and a mapped finalized Solana Memo CPI. The completed MetaMask page has no send controls. Production Vercel still serves the earlier approved release until the owner authorizes publication. See [live evidence](evidence/hadrian-live.json), [release notes](docs/RELEASE_NOTES_V2.md), and [test evidence](docs/TEST_EVIDENCE_V2.md).
 
 Quick local demonstration:
 
@@ -16,13 +16,13 @@ npm run dev
 
 The browser scanner accepts up to 40 `.sol` files or a project folder. It checks relative imports against selected files but does not compile arbitrary browser uploads or resolve external packages. CLI and fixed probes provide the reproducible preparation path. A preceding `// rome-lab-ignore RULE: reason` comment suppresses a finding on the next line while preserving it visibly in the report. The local review route `/source/{Probe}.sol` serves the exact checked-in probe source used by the evidence ledger.
 
-Read-only Hadrian preparation: `npm run probe:prepare`, `npm run cpi:prepare`, `npm run network:check`, and with a public burner address set, `npm run hadrian:dry-run` or `npm run hadrian:dry-run -- --cpi`. The CPI estimate covers **deployment only**. The local-only `hadrian:deploy` script requires an explicit `--send` flag, a separate burner key, and an interactive approval before each transaction. Its write policy is the unmodified official Rome SDK v0.4.0 `submitRomeTx` module; no transaction has been sent in this project.
+Recheck the public Hadrian and Solana evidence with `npm run evidence:verify`. This read-only command writes `evidence/hadrian-live.json`; it does not sign or send transactions. The older preparation and deployment scripts remain for historical reproducibility and are not part of the completed UI workflow.
 
 ## Previous v1 release information
 
 Rome Compatibility Lab is a Solidity AST preflight for teams evaluating contracts for [Rome](https://docs.rome.builders/). It points to source files and lines, explains Rome-specific review points, and compares portable reports. It does **not** compile untrusted submissions, prove cross-VM execution, or perform a security audit.
 
-## Current evidence
+## Historical v1 review evidence
 
 The browser scanner, CLI, GitHub importer guards, and report comparison have local automated tests. On 6 November 2026, typecheck, strict TypeScript lint, all 20 unit/security tests, all four E2E tests against the production build, the production build, and both npm audits passed locally. Local HTTP checks returned 200 for `/`, `/scan`, `/report`, `/history`, and `/evidence`, and 503 for anonymous `POST /api/scan`. The owner confirmed Hadrian RPC HTTP 200 with chain ID 200010 and explorer HTTP 200. The checked-in Hadrian probe has only been compiled locally; no contract has been deployed and no on-chain proof is claimed. The pinned Rome registry is `v0.1.0`, while the upstream README recommends `v0.3.0`; reconcile that version before any live deployment.
 
@@ -75,11 +75,11 @@ npm run test:e2e
 
 `npm test` includes scanner, GitHub importer, API quota, malformed input and output-escaping regressions. `npm run lint` is a strict TypeScript unused-code check, not ESLint. The E2E suite covers the local scan flow, upload, Markdown export, API fail-closed behavior and evidence status. On Windows, if Playwright's managed dev-server cleanup hangs, start the built server separately with `npm run start` and run E2E against it.
 
-## Hadrian research and deployment boundary
+## Historical Hadrian preparation notes
 
 Read-only checks: `npm run network:check` or, on ordinary Windows PowerShell, `powershell -File scripts/diagnose-hadrian.ps1`. Both use the pinned registry. The latter writes `hadrian-diagnostic.json` (ignored by Git). The pinned values are chain ID 200010, RPC `https://hadrian.testnet.romeprotocol.xyz/`, and explorer `https://via-hadrian.testnet.romeprotocol.xyz/`. The owner confirmed RPC and explorer reachability on 6 November 2026; this release session did not independently repeat those probes. The current official registry version must be reviewed before deployment.
 
-`npm run probe:prepare` compiles only the checked-in `probes/LaneProbe.sol` with an integrity-checked Solidity 0.8.24 compiler and writes unsigned `probe-preparation.json`. `npm run hadrian:dry-run` uses only a public `ROME_BURNER_ADDRESS` to read block, balance, gas price and an RPC gas estimate; it does not sign or send. The estimate can overpredict Rome's actual charge. Use a separate burner wallet and test funds. **Any real transaction requires separate owner approval.** After a permitted deployment, collect real receipts, contract address, explorer URL and Solana settlement mapping; until then the UI says BLOCKED.
+`npm run probe:prepare` compiles only the checked-in `probes/LaneProbe.sol` with an integrity-checked Solidity 0.8.24 compiler and writes unsigned `probe-preparation.json`. `npm run hadrian:dry-run` reads estimates only. These notes describe the earlier preflight; the current verified receipts, addresses and Solana settlement are in `evidence/hadrian-live.json`.
 
 Use [Rome's current CPI interface](https://docs.rome.builders/developer-guides/call-solana-from-evm) and [canonical registry](https://github.com/rome-protocol/rome-registry) for addresses and ABI. The scanner's rules are narrow AST checks; indirect data flow, imports and bytecode behavior need review and actual tests. Read the [constraints](https://docs.rome.builders/core-concepts/constraints) before attempting CPI.
 
