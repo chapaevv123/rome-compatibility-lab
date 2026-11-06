@@ -11,6 +11,7 @@ export function toMarkdown(report:ScanReport){
   ...report.findings.map(f=>`| ${f.severity} | ${f.confidence} | ${safe(f.file)}:${f.line} | ${safe(f.rule)} | ${safe(f.message)} | ${safe(f.recommendation)} |`),
   '',
   ...(report.parseErrors.length?['## Parse errors','',...report.parseErrors.map(e=>`- ${safe(e.file)}: ${safe(e.message)}`),'']:[]),
+  ...(report.imports?.length?['## Imports','',...report.imports.map(i=>`- ${safe(i.status)} ${safe(i.file)}:${i.line} → ${safe(i.importPath)}`),'']:[]),
  ];
  if(!report.findings.length)lines.push('No rules matched. This does not prove full compatibility.');
  return lines.join('\n')+'\n';

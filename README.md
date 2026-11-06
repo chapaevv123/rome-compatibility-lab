@@ -1,4 +1,24 @@
-# Rome Compatibility Lab
+# Rome Compatibility Lab — v2 review branch
+
+This branch adds four **real local EVM executions**, source/bytecode-hashed evidence, focused Rome rules, and prepared Hadrian/CPI probes. **No Hadrian transaction or CPI success is claimed.** Production Vercel still serves the earlier approved version until the owner authorizes a release. See [v2 report](ROME_COMPATIBILITY_LAB_V2_REPORT_RU.md), [behavior matrix](docs/ROME_BEHAVIOR_MATRIX.md), [architecture](docs/ARCHITECTURE_V2.md), and [test evidence](docs/TEST_EVIDENCE_V2.md).
+
+Quick local demonstration:
+
+```sh
+npm ci
+npm test
+npm run evm:local
+npm run probe:prepare
+npm run cpi:prepare
+npm run network:check
+npm run dev
+```
+
+The browser scanner accepts up to 40 `.sol` files or a project folder. It checks relative imports against selected files but does not compile arbitrary browser uploads or resolve external packages. CLI and fixed probes provide the reproducible preparation path. A preceding `// rome-lab-ignore RULE: reason` comment suppresses a finding on the next line while preserving it visibly in the report. The local review route `/source/{Probe}.sol` serves the exact checked-in probe source used by the evidence ledger.
+
+Read-only Hadrian preparation: `npm run probe:prepare`, `npm run cpi:prepare`, `npm run network:check`, and with a public burner address set, `npm run hadrian:dry-run` or `npm run hadrian:dry-run -- --cpi`. The CPI estimate covers **deployment only**. The local-only `hadrian:deploy` script requires an explicit `--send` flag, a separate burner key, and an interactive approval before each transaction. Its write policy is the unmodified official Rome SDK v0.4.0 `submitRomeTx` module; no transaction has been sent in this project.
+
+## Previous v1 release information
 
 Rome Compatibility Lab is a Solidity AST preflight for teams evaluating contracts for [Rome](https://docs.rome.builders/). It points to source files and lines, explains Rome-specific review points, and compares portable reports. It does **not** compile untrusted submissions, prove cross-VM execution, or perform a security audit.
 

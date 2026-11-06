@@ -16,6 +16,11 @@ coverage/
 hadrian-diagnostic.json
 reports/*.json
 probe-preparation.json
+cpi-preparation.json
+hadrian-execution.json
+hadrian-cpi-execution.json
+hadrian-verification.json
+hadrian-cpi-verification.json
 .npm-cache/
 test-results/
 playwright-report/

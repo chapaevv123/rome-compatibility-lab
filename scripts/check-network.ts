@@ -14,7 +14,7 @@ const explorer=await (async()=>{
   }catch(error){return {status:'BLOCKED',reason:String(error)};}
 })();
 const result={
-  source:'rome-registry#v0.1.0',
+  source:'rome-registry#v0.3.0',
   configuredChainId:hadrian.chainId,
   rpcUrl:hadrian.rpcUrl,
   explorerUrl:hadrian.explorerUrl,

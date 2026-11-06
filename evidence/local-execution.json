@@ -1,0 +1,108 @@
+{
+  "status": "LOCAL_VERIFIED",
+  "generatedAt": "2026-11-06T19:59:27.761Z",
+  "records": [
+    {
+      "testId": "Clean",
+      "contract": "Clean",
+      "sourceHash": "sha256:30a1ff7ac7e686e47648f4bfa505a0388831413c5a748a5c8be7f99841ded6d8",
+      "bytecodeHash": "sha256:fe3b349edc98a24cf0da159adb17682bd001d42faa83e85a55fbc5ff2b5c1535",
+      "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+      "registryVersion": "v0.3.0",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "5",
+        "events": [],
+        "state": {},
+        "gasUsed": "927"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "NOT_EXECUTED"
+    },
+    {
+      "testId": "OriginHint",
+      "contract": "OriginHint",
+      "sourceHash": "sha256:46f12ae6fb2561fac69192e8892cc5d390def441d2a10c2627e60239b16fbf58",
+      "bytecodeHash": "sha256:e3cff8c475c189871869a2dd7d4a55804a47e0b15c88a77255b6c38ae1db337f",
+      "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+      "registryVersion": "v0.3.0",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "0x1000000000000000000000000000000000000001",
+        "events": [],
+        "state": {},
+        "gasUsed": "357"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "NOT_EXECUTED"
+    },
+    {
+      "testId": "LaneProbe",
+      "contract": "LaneProbe",
+      "sourceHash": "sha256:2ad0c44097cc945cef7a8d180e0382f814820cba43004d4d2e5d5caf7fdb7732",
+      "bytecodeHash": "sha256:b8d358d94f50e7642c3702859d7732f3e448b8abbba3d84ca3b158bc8ff0b4da",
+      "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+      "registryVersion": "v0.3.0",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "0x1000000000000000000000000000000000000001",
+        "events": [
+          {
+            "name": "Observed",
+            "args": {
+              "caller": "0x1000000000000000000000000000000000000001",
+              "blockNumber": "0",
+              "timestamp": "0"
+            }
+          }
+        ],
+        "state": {},
+        "gasUsed": "2048"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "NOT_EXECUTED"
+    },
+    {
+      "testId": "Counter",
+      "contract": "Counter",
+      "sourceHash": "sha256:8ffcbcc2682c725af112265bcc400736266fb30cdfd25c9ac9845e5516f531e5",
+      "bytecodeHash": "sha256:a046f59022415b56bf7fbe024f17f98780c84cd6604c248aaf12537cca713475",
+      "compiler": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+      "registryVersion": "v0.3.0",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "1",
+        "events": [
+          {
+            "name": "Incremented",
+            "args": {
+              "value": "1"
+            }
+          }
+        ],
+        "state": {
+          "count": "1"
+        },
+        "gasUsed": "23741"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "NOT_EXECUTED"
+    }
+  ]
+}

@@ -1,2 +1,3 @@
 @import "tailwindcss";
 :root{color-scheme:dark}body{background:#0b0d16;color:#ebe9f5;font-family:Arial,Helvetica,sans-serif}a{transition:color .2s}a:hover{color:#f3aa79}.panel{background:#151827;border:1px solid #303447;border-radius:18px}.muted{color:#9b9eb2}.accent{color:#efad7d}.button{background:#e99c6f;color:#17121a;border-radius:10px;padding:12px 18px;font-weight:700}.input{background:#0c0e19;border:1px solid #383d55;border-radius:10px;padding:12px;color:#fff;width:100%}
+:focus-visible{outline:3px solid #ffd2ac;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.6}pre,code{white-space:pre-wrap;overflow-wrap:anywhere}table th{font-weight:700}

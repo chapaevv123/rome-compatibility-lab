@@ -10,7 +10,7 @@ if(actualHash!==expectedHash)throw Error('Pinned Solidity compiler hash mismatch
 const soljson=createRequire(import.meta.url)(fileURLToPath(compilerPath)) as {cwrap:(name:string,returnType:string,argTypes:string[])=>Function};
 const version=String(soljson.cwrap('solidity_version','string',[])());
 if(!version.startsWith('0.8.24+'))throw Error(`Unexpected Solidity compiler ${version}`);
-const file='probes/LaneProbe.sol';const content=readFileSync(file,'utf8');
+const file='probes/LaneProbe.sol';const content=readFileSync(file,'utf8').replace(/\r\n/g,'\n');
 const input={language:'Solidity',sources:{[file]:{content}},settings:{outputSelection:{'*':{'*':['abi','evm.bytecode.object']}}}};
 const compile=soljson.cwrap('solidity_compile','string',['string','number','number']);
 const output=JSON.parse(compile(JSON.stringify(input),0,0));
@@ -18,5 +18,5 @@ if(output.errors?.some((e:any)=>e.severity==='error'))throw Error(JSON.stringify
 const contract=output.contracts[file].LaneProbe;
 if(!contract.evm.bytecode.object)throw Error('Missing bytecode');
 const hadrian=getChain(200010);if(!hadrian)throw Error('Hadrian missing from pinned registry');
-const artifact={status:'UNVERIFIED',network:{chainId:hadrian.chainId,rpcUrl:hadrian.rpcUrl},contract:'LaneProbe',compiler:'solc@0.8.24',abi:contract.abi,creationBytecode:'0x'+contract.evm.bytecode.object,hypothesis:'observe emits caller, block number and timestamp',note:'Unsigned preparation only. Deploy with approved burner wallet and Rome SDK submitRomeTx.'};
+const artifact={status:'UNVERIFIED',registryVersion:'v0.3.0',network:{chainId:hadrian.chainId,rpcUrl:hadrian.rpcUrl},contract:'LaneProbe',sourceHash:'sha256:'+createHash('sha256').update(content).digest('hex'),compiler:version,bytecodeHash:'sha256:'+createHash('sha256').update(contract.evm.bytecode.object,'hex').digest('hex'),abi:contract.abi,creationBytecode:'0x'+contract.evm.bytecode.object,hypothesis:'observe emits caller, block number and timestamp',note:'Unsigned preparation only. No transaction signed or sent.'};
 writeFileSync('probe-preparation.json',JSON.stringify(artifact,null,2));console.log('UNVERIFIED: wrote probe-preparation.json; no transaction signed or sent');

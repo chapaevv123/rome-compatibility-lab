@@ -1,0 +1,41 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
+import {createVM} from '@ethereumjs/vm';
+import {Common,Mainnet,Hardfork} from '@ethereumjs/common';
+import {createAccount,createAddressFromString,hexToBytes,bytesToHex} from '@ethereumjs/util';
+import {encodeFunctionData,decodeFunctionResult,decodeEventLog} from 'viem';
+
+const compilerPath=new URL('../vendor/solc-0.8.24/soljson.cjs',import.meta.url);
+const expected='fb59b825b7d57f9de89cd9de2415b12aab1fcc7eb2573fd2bf5c9b969eacf4d9';
+if(createHash('sha256').update(readFileSync(compilerPath)).digest('hex')!==expected)throw Error('Compiler integrity failure');
+const soljson=createRequire(import.meta.url)(fileURLToPath(compilerPath)) as {cwrap:(name:string,returnType:string,argTypes:string[])=>Function};
+const version=String(soljson.cwrap('solidity_version','string',[])());
+const compile=soljson.cwrap('solidity_compile','string',['string','number','number']);
+const cases=[{file:'probes/Clean.sol',name:'Clean',call:'add',args:[2n,3n],read:'add',readArgs:[2n,3n],expected:'5',event:null},{file:'probes/OriginHint.sol',name:'OriginHint',call:'origin',args:[],read:'origin',readArgs:[],expected:'0x1000000000000000000000000000000000000001',event:null},{file:'probes/LaneProbe.sol',name:'LaneProbe',call:'observe',args:[],read:'caller',readArgs:[],expected:'0x1000000000000000000000000000000000000001',event:'Observed'},{file:'probes/Counter.sol',name:'Counter',call:'increment',args:[],read:'count',readArgs:[],expected:'1',event:'Incremented'}];
+const vm=await createVM({common:new Common({chain:Mainnet,hardfork:Hardfork.Cancun})});
+const caller=createAddressFromString('0x1000000000000000000000000000000000000001');
+await vm.stateManager.putAccount(caller,createAccount({balance:10n**18n}));
+const records=[];
+for(const scenario of cases){
+ const source=readFileSync(scenario.file,'utf8').replace(/\r\n/g,'\n');
+ const input={language:'Solidity',sources:{[scenario.file]:{content:source}},settings:{outputSelection:{'*':{'*':['abi','evm.bytecode.object']}}}};
+ const output=JSON.parse(compile(JSON.stringify(input),0,0));
+ if(output.errors?.some((e:{severity:string})=>e.severity==='error'))throw Error(JSON.stringify(output.errors));
+ const contract=output.contracts[scenario.file][scenario.name];
+ const deployed=await vm.evm.runCall({caller,data:hexToBytes(('0x'+contract.evm.bytecode.object) as `0x${string}`),gasLimit:5_000_000n});
+ if(deployed.execResult.exceptionError||!deployed.createdAddress)throw Error('Local deployment failed: '+scenario.name);
+ const address=deployed.createdAddress;
+ const data=encodeFunctionData({abi:contract.abi,functionName:scenario.call,args:scenario.args});
+ const result=await vm.evm.runCall({caller,to:address,data:hexToBytes(data),gasLimit:2_000_000n,origin:caller});
+ if(result.execResult.exceptionError)throw Error('Local call failed: '+scenario.name+' '+result.execResult.exceptionError.error);
+ const readData=encodeFunctionData({abi:contract.abi,functionName:scenario.read,args:scenario.readArgs});
+ const read=await vm.evm.runCall({caller,to:address,data:hexToBytes(readData),gasLimit:2_000_000n,origin:caller});
+ const returnValue=decodeFunctionResult({abi:contract.abi,functionName:scenario.read,data:bytesToHex(read.execResult.returnValue)});
+ const events=(result.execResult.logs||[]).map(log=>{const [,topics,data]=log;const decoded=decodeEventLog({abi:contract.abi,topics:topics.map(topic=>bytesToHex(topic)) as [`0x${string}`,...`0x${string}`[]],data:bytesToHex(data)}) as {eventName:string;args:unknown};return {name:decoded.eventName,args:JSON.parse(JSON.stringify(decoded.args,(_,v)=>typeof v==='bigint'?v.toString():v))};});
+ if(String(returnValue)!==scenario.expected||events.map(event=>event.name).join(',')!==(scenario.event||''))throw Error('Local behavior assertion failed: '+scenario.name);
+ records.push({testId:scenario.name,contract:scenario.name,sourceHash:'sha256:'+createHash('sha256').update(source).digest('hex'),bytecodeHash:'sha256:'+createHash('sha256').update(contract.evm.bytecode.object,'hex').digest('hex'),compiler:version,registryVersion:'v0.3.0',local:{environment:'LOCAL_EVM',status:'SUCCESS',returnValue:String(returnValue),events,state:scenario.name==='Counter'?{count:String(returnValue)}:{},gasUsed:String(result.execResult.executionGasUsed)},hadrian:{environment:'HADRIAN',status:'NOT_EXECUTED'},classification:'NOT_EXECUTED'});
+}
+writeFileSync('evidence/local-execution.json',JSON.stringify({status:'LOCAL_VERIFIED',generatedAt:new Date().toISOString(),records},null,2));
+console.log(`LOCAL_VERIFIED: ${records.length} contracts executed in an in-memory EVM; Hadrian NOT_EXECUTED`);
