@@ -5,6 +5,8 @@ import {readFileSync} from 'node:fs';
 import {DEPLOYER,type WalletProvider} from '../app/hadrian/metamask/flow';
 import {LANE_ADDRESS,LANE_DEPLOY_HASH,operationData,prepareOperation,sendOperation,verifyCpiArtifact} from '../app/hadrian/metamask/operations';
 import artifact from '../app/hadrian/metamask/cpi-memo-artifact.json';
+import hadrian from '../app/hadrian/metamask/hadrian-chain.json';
+import {getChain} from '@rome-protocol/registry';
 
 const sent=`0x${'ab'.repeat(32)}`;
 function mock(){
@@ -25,6 +27,7 @@ function mock(){
 }
 
 test('CPI deployment uses the pinned prepared artifact and current ABI',async()=>{await verifyCpiArtifact();assert.match(operationData('cpiDeploy'),/^0x[0-9a-f]+$/i);execFileSync(process.execPath,['--require','./scripts/tsx-userinfo.cjs','--import','tsx','scripts/prepare-cpi.ts']);const prepared=JSON.parse(readFileSync('cpi-preparation.json','utf8'));assert.equal(artifact.creationBytecode,prepared.creationBytecode);assert.deepEqual(artifact.abi,prepared.abi)});
+test('server-safe Hadrian metadata matches registry v0.3.0',()=>{assert.deepEqual(hadrian,getChain(200010))});
 test('observe estimate is read-only and a changed chain blocks sending',async()=>{
   const {provider,calls,changeChain}=mock();
   const quote=await prepareOperation(provider,'observe');

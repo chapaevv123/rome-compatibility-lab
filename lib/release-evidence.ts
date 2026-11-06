@@ -1,5 +1,5 @@
 import {decodeEventLog,decodeFunctionResult,encodeFunctionData,type Hex} from 'viem';
-import {getChain} from '@rome-protocol/registry';
+import chain from '../app/hadrian/metamask/hadrian-chain.json';
 import laneArtifact from '../app/hadrian/metamask/lane-probe-artifact.json';
 import cpiArtifact from '../app/hadrian/metamask/cpi-memo-artifact.json';
 import {DEPLOYER,HADRIAN_CHAIN_ID,EXPLORER,type WalletProvider} from '../app/hadrian/metamask/flow';
@@ -13,8 +13,7 @@ export const RELEASE={
 } as const;
 export const SOLANA_SIGNATURE='5csdQGcbiKbRYpjyn14uaTLHanmZk6jLNdUjaPVdmTHiPWK14dMKWFqyT5AoLqj2i2jfQuf3F1WcZvzQNm7pwiCg';
 const MEMO_PROGRAM='MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr';
-const chain=getChain(Number(HADRIAN_CHAIN_ID)) as {chainId:number;rpcUrl:string;romeEvmProgramId:string;solana:{cluster:string;rpc:string;explorerUrl:string}}|null;
-if(!chain||chain.chainId!==Number(HADRIAN_CHAIN_ID)||chain.solana?.cluster!=='devnet')throw Error('Hadrian registry mismatch');
+if(chain.chainId!==Number(HADRIAN_CHAIN_ID)||chain.solana.cluster!=='devnet')throw Error('Hadrian registry mismatch');
 const hadrian=chain;
 const evmRpc=hadrian.rpcUrl;
 const solanaRpc=hadrian.solana.rpc;
