@@ -12,6 +12,6 @@ Status: ready for owner review; **not submitted**. Fill Website and GitHub only 
 
 **Website:** Pending verified public HTTPS deployment.
 
-**GitHub:** Pending verified publication of `chapaevv123/rome-compatibility-lab`.
+**GitHub:** https://github.com/chapaevv123/rome-compatibility-lab
 
 The builder must submit this manually after checking the published app. Do not list a contract address or transaction until real on-chain evidence exists.
