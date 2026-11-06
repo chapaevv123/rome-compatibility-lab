@@ -1,6 +1,6 @@
 # Rome Arena submission text
 
-Status: ready for owner review; **not submitted**. Fill Website and GitHub only after the public deployment and repository have been independently verified.
+Status: ready for owner review; **not submitted**. The public repository and HTTPS demo have been independently verified.
 
 **Name:** Rome Compatibility Lab
 
@@ -10,7 +10,7 @@ Status: ready for owner review; **not submitted**. Fill Website and GitHub only 
 
 **App type:** Other / developer tooling. If the form only offers EVM or Both, choose EVM and explain that the tool analyzes Solidity but has no verified Solana integration.
 
-**Website:** Pending verified public HTTPS deployment.
+**Website:** https://rome-compatibility-lab.vercel.app
 
 **GitHub:** https://github.com/chapaevv123/rome-compatibility-lab
 
