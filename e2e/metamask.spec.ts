@@ -8,7 +8,7 @@ test('existing operations remain linked and new operations require explicit wall
   await expect(page.getByRole('link',{name:/0x89c4c377/})).toHaveAttribute('href',/via-hadrian\.testnet\.romeprotocol\.xyz\/tx\//);
 });
 
-test('local differential quote is read-only until owner confirms',async({page})=>{
+test('completed differential operations cannot be sent on page load',async({page})=>{
   await page.addInitScript(()=>{
     const address='0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d';
     (window as Window&{ethereum?:unknown;differentialSendCount?:number}).differentialSendCount=0;
@@ -19,10 +19,8 @@ test('local differential quote is read-only until owner confirms',async({page})=
     }};
   });
   await page.goto('/hadrian/metamask');
-  await page.getByRole('button',{name:'Connect MetaMask'}).click();
-  await page.getByRole('button',{name:'Refresh estimate'}).click();
-  await expect(page.getByText(/Max fee per gas/)).toBeVisible();
-  await expect(page.getByRole('button',{name:'Confirm in MetaMask: deploy:Clean'})).toBeDisabled();
+  await expect(page.getByRole('button',{name:'Confirm in MetaMask: deploy:Clean'})).toHaveCount(0);
+  await expect(page.getByText(/Refresh estimate/)).toHaveCount(0);
   expect(await page.evaluate(()=>(window as Window&{differentialSendCount?:number}).differentialSendCount)).toBe(0);
 });
 test('pending hash survives reload and blocks a second deployment',async({page})=>{

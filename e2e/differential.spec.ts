@@ -9,9 +9,9 @@ test('reviewer path keeps differential and historical evidence distinct',async({
   await page.getByRole('button',{name:/Run preflight/}).click();
   await expect(page.getByRole('heading',{name:'Compatibility Report'})).toBeVisible();
   await page.getByRole('navigation').getByRole('link',{name:'EVM vs Rome'}).click();
-  await expect(page.getByRole('heading',{name:'Current differential'})).toBeVisible();
-  await expect(page.getByText('FRESH_RPC · COMPATIBLE')).toBeVisible();
-  await expect(page.getByText('FRESH_RPC · BLOCKED')).toHaveCount(3);
+  await expect(page.getByRole('heading',{name:'Live Differential'})).toBeVisible();
+  await expect(page.getByText('FRESH_RPC · COMPATIBLE')).toHaveCount(4);
+  await expect(page.getByText('FRESH_RPC · BLOCKED')).toHaveCount(0);
   await expect(page.getByRole('heading',{name:'Historical local run'})).toBeVisible();
   await page.getByRole('navigation').getByRole('link',{name:'Hadrian Lab'}).click();
   await expect(page.getByRole('heading',{name:'Hadrian Execution Lab'})).toBeVisible();
@@ -25,9 +25,9 @@ test('RPC error shows recorded check and no fresh claim on mobile',async({page})
   await page.route('**/api/differential/live',route=>route.fulfill({status:503,json:{error:'RPC unavailable'}}));
   await page.goto('/cross-vm');
   await expect(page.getByText(/fresh check unavailable: RPC unavailable/)).toBeVisible();
-  await expect(page.getByText('RECORDED_RPC_CHECK · COMPATIBLE')).toBeVisible();
+  await expect(page.getByText('RECORDED_RPC_CHECK · COMPATIBLE')).toHaveCount(4);
   await expect(page.getByText('FRESH_RPC · COMPATIBLE')).toHaveCount(0);
-  await expect(page.getByRole('link',{name:'Verified Hadrian transaction'})).toBeVisible();
+  await expect(page.getByRole('link',{name:/Verified Hadrian transaction/}).first()).toBeVisible();
   await page.getByRole('navigation').getByRole('link',{name:'Evidence'}).click();
   await expect(page.getByRole('heading',{name:'Evidence Explorer'})).toBeVisible();
   await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);

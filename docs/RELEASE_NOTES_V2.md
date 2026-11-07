@@ -9,4 +9,4 @@
 
 Machine-verifiable evidence: `evidence/hadrian-live.json`; reproduce with `npm run evidence:verify`.
 
-The evidence release at SHA `1abb4ee9b9c791004d243d1069ff9fd6bf87be0c` is live in production and passed public smoke checks on 7 November 2026. The newer live differential work remains local pending a new CI and separate owner approval for production deployment. It reuses LaneProbe's verified receipt; Clean, OriginHint and Counter remain BLOCKED without matching Hadrian transactions.
+The evidence release at SHA `1abb4ee9b9c791004d243d1069ff9fd6bf87be0c` remains production. The local release candidate now has four independently RPC-verified COMPATIBLE differential cases (Clean, OriginHint, LaneProbe, Counter), with all six new transaction hashes and matching local EVM evidence. `npm run differential:verify` reproduced 4 compatible, 0 divergent, 0 blocked on 7 November 2026. The separate CPI proof remains LIVE_VERIFIED. GitHub push, CI and a new Vercel release still require owner approval.

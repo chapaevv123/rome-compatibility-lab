@@ -1,26 +1,17 @@
 # Rome Compatibility Lab 2.0 — release checklist
 
-## Уже подтверждено
+## Подтверждено локально
 
-- [x] Production `https://rome-compatibility-lab.vercel.app` выпущен из `1abb4ee9b9c791004d243d1069ff9fd6bf87be0c`; предыдущий CI PASS.
-- [x] Публичные страницы и `/api/evidence/live` отвечали `200`; четыре Hadrian receipts и Solana Memo CPI — `LIVE_VERIFIED` на момент проверки 7 ноября 2026 года.
-- [x] Публичный `POST /api/scan` возвращает `503` до настройки quota и WAF; сканирование в браузере работает без него.
-- [x] Четыре локальных EVM probe воспроизводятся; исторический ledger сохраняет `NOT_EXECUTED` для Hadrian.
-- [x] Для LaneProbe свежий read-only RPC и нормализованное сравнение дают `COMPATIBLE`; источник и bytecode сверены с проверенным deployment.
-- [x] Для Clean, OriginHint и Counter статус `BLOCKED`, с unsigned планом; результатов Hadrian для них нет.
+- [x] Шесть новых Hadrian deploy/call receipts проверены read-only RPC; Clean, OriginHint, LaneProbe, Counter — COMPATIBLE (4/4), divergence 0, blocked 0. Снимок: [live differential](evidence/live-differential.json).
+- [x] CPI: Hadrian invokeMemo и finalized Solana Devnet Memo, точный payload, `LIVE_VERIFIED`. Снимок: [Hadrian evidence](evidence/hadrian-live.json).
+- [x] Публичный UI различает recorded и fresh RPC, отображает контракты, хеши, readback и Explorer. Production transaction console отключён.
+- [x] Unit/integration 66/66, differential regression, typecheck, lint, build, оба npm audit — exit 0; E2E: 11 PASS, 1 явно пропущенный live-RPC wallet test, exit 0. Матрица: [release verification](docs/RELEASE_VERIFICATION_2026-11-07.md). Финальный commit проверяется отдельно.
 
-## Перед новым production release
+## Перед публикацией
 
-- [x] Целевые unit, differential/regression, typecheck, lint, build, E2E, оба npm audit, probe/CPI preparation и CLI прошли локально: unit 54/54, E2E 9/9 с exit code 0 против локального production build, свежий RPC differential и regression без новых расхождений.
-- [ ] Полная обязательная CI-матрица проходит на новом commit в релизной ветке.
-- [ ] Владелец подтверждает новый production deployment изменённой функциональности.
-- [ ] После публикации проверены фактический production SHA, страницы, browser journey, API и live evidence.
+- [ ] Владелец разрешает GitHub push, merge main и Vercel production deployment проверенного commit.
+- [ ] GitHub CI на опубликованном commit PASS; проверить SHA production, страницы, API и fresh RPC.
+- [ ] Владелец записывает и проверяет настоящее 2–3 минутное видео; добавляет URL в Arena.
+- [ ] Владелец проверяет требования authenticated Arena form, регистрирует app и привязывает контракты; отправляет заявку лично.
 
-## Конкурсный пробел
-
-- [ ] Владелец отдельно разрешает три группы новых testnet транзакций и бюджет после свежего MetaMask quote. Текущий unsigned plan **не разрешает отправку**.
-- [ ] Clean, OriginHint и Counter имеют реальные Hadrian deploy/call receipts, code/readback, нормализованное сравнение и regression; до этого они `BLOCKED`.
-- [ ] Готовое видео записано, проверено и опубликовано владельцем; его URL внесён в Arena draft.
-- [ ] Владелец сверил поля Arena, связал контракты и лично отправил заявку. Грант или отбор не гарантированы.
-
-План: [`evidence/unsigned-differential-plan.json`](evidence/unsigned-differential-plan.json). В нём точные creation/runtime bytecode и calldata, но predicted addresses зависят от nonce. Read-only оценка на блоке 519636893: только лимиты трёх deployment — `2.009708440338224100` test USDC при балансе `11.733611224783532832` test USDC. Всего нужны шесть отдельных MetaMask подтверждений: сначала три deployment подряд, затем три call. Вызовы и изменение цены газа в оценку не включены. Локальная инструкция и порядок кнопок — в [`docs/LIVE_DIFFERENTIAL_PLAN.md`](docs/LIVE_DIFFERENTIAL_PLAN.md). Приватные ключи в приложение или чат не вводить.
+Никаких новых on-chain транзакций, private key, force push или нового contract deployment. Laurels не равны денежной награде; grants решаются командой Rome индивидуально.

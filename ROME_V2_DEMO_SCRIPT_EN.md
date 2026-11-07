@@ -1,17 +1,17 @@
-# Rome Compatibility Lab 2.0 — final 2:40 demo outline
+# Rome Compatibility Lab 2.0 — 2:45 demo script
 
-**0:00–0:20 — Problem.** Solidity that compiles can still assume EVM behavior that differs on Rome. Introduce source checks and evidence states.
+**0:00–0:20 — Problem.** Solidity compilation alone does not establish Rome compatibility. The lab gives source findings and execution evidence with explicit verification states.
 
-**0:20–0:50 — Scan.** Open `/scan`, scan the supplied Solidity examples, and show line, severity, confidence, source and remediation.
+**0:20–0:45 — Scanner and report.** Open /scan, run the supplied Solidity example, show file/line, confidence, official source and remediation. Open its report.
 
-**0:50–1:10 — Differential.** After the new production release, open `/cross-vm`. Show LaneProbe `COMPATIBLE` after sender/block-context normalization and the other three rows `BLOCKED`. The historical local run remains separate and still says Hadrian `NOT_EXECUTED`. Until that release, show the existing historical table only.
+**0:45–1:05 — Local EVM.** Open /cross-vm. Explain the historical local EthereumJS EVM ledger and its original NOT_EXECUTED Hadrian column; it is a separate run.
 
-**1:10–1:35 — LaneProbe.** In `/evidence`, open the [deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x76d3a3383926b2d0e6c7953fd28c1a3472ef655a3d5ad9c046b383428ae58004) and [observe()](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xdcf513ed4e530c8eeb21b6d86157b7e2066f0905d8ffe16504d6feef05b6467f) cases. Show receipt, `Observed` event and `caller()` readback.
+**1:05–1:40 — Live Differential.** Show Clean, OriginHint, LaneProbe and Counter, all COMPATIBLE after fresh RPC verification. Show local return/events/state versus Hadrian, and normalization of sender role and LaneProbe block context. Do not claim gas parity. Open the Clean [call](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x39a9e0664b7d23b41d870d6ee12d29024f2e7ee7e357af89cafe96e8909d3d68) and Counter [call](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x5f8fbbdaeb2d6548c07997ce5ab2f52c09d30594f9f9b58530e09af1f8c5cc11).
 
-**1:35–2:05 — CPI Memo.** Show [CpiMemoProbe deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xac5555d6a67f9995b215ed0e473c6c2cc4bde61149acad239b0714a20a19e946), `memoProgram()` readback and the separate [invokeMemo() EVM receipt](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x89c4c377b49d24d2aeb9753747505bd3d452703eab305d715da490b297e41845).
+**1:40–2:00 — Hadrian Lab.** Show [LaneProbe observe](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xdcf513ed4e530c8eeb21b6d86157b7e2066f0905d8ffe16504d6feef05b6467f), its event/readback and the read-only production console.
 
-**2:05–2:25 — Solana settlement.** Open the [mapped Solana transaction](https://explorer.solana.com/tx/5csdQGcbiKbRYpjyn14uaTLHanmZk6jLNdUjaPVdmTHiPWK14dMKWFqyT5AoLqj2i2jfQuf3F1WcZvzQNm7pwiCg?cluster=devnet). Show finalized status, inner Memo instruction, exact `Rome Compatibility Lab CPI-MEMO-01` payload and success logs. Use the case-sensitive signature returned by Hadrian RPC.
+**2:00–2:25 — CPI Lab.** Show [invokeMemo](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x89c4c377b49d24d2aeb9753747505bd3d452703eab305d715da490b297e41845) and the [finalized Solana transaction](https://explorer.solana.com/tx/5csdQGcbiKbRYpjyn14uaTLHanmZk6jLNdUjaPVdmTHiPWK14dMKWFqyT5AoLqj2i2jfQuf3F1WcZvzQNm7pwiCg?cluster=devnet) containing `Rome Compatibility Lab CPI-MEMO-01`.
 
-**2:25–2:40 — Reproduce.** Show the recorded JSON and `npm run evidence:verify`. Explain that Evidence Explorer rechecks public RPC data on reload and that the completed MetaMask page has no send buttons.
+**2:25–2:45 — Evidence Explorer and value.** Show four differential cases and the separate CPI proof. Reload; display fresh RPC time or clearly labeled recorded snapshot if RPC fails. Say teams can inspect documented Rome constraints before deployment and reproduce exact probe comparisons.
 
-The current v2 production site passed HTTP smoke checks on 7 November 2026. Record the new differential segment only after its separately approved production release. Confirm that both live APIs report their actual statuses while recording, then review the finished video before sharing its link. If Solana Explorer rate limits the transaction page, show the live Evidence Explorer and the exact explorer link rather than claiming that the explorer loaded. No grant, award or Builder Program endorsement is claimed.
+Record only after the owner-approved production release and confirm the public API statuses during capture. No mock transaction, grant or award claim. Video is not yet recorded.

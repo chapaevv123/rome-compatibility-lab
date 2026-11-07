@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T11:50:01.626Z",
+  "checkedAt": "2026-11-07T12:35:36.837Z",
   "chainId": 200010,
   "source": "RECORDED_RPC_CHECK",
   "rows": [
@@ -15,11 +15,17 @@
       },
       "hadrian": {
         "environment": "HADRIAN",
-        "status": "NOT_EXECUTED"
+        "status": "SUCCESS",
+        "events": [],
+        "state": {},
+        "gasUsed": "10001",
+        "returnValue": "5"
       },
-      "classification": "BLOCKED",
+      "classification": "COMPATIBLE",
       "differences": [],
-      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "Hadrian deployment/call receipts, calldata, deployed bytecode, event and readback were rechecked against RPC; sender role was normalized for OriginHint.",
+      "transactionHash": "0x39a9e0664b7d23b41d870d6ee12d29024f2e7ee7e357af89cafe96e8909d3d68",
+      "contractAddress": "0x926Ea7d5BC282866fD876826ae0408871D9A2610"
     },
     {
       "testId": "OriginHint",
@@ -33,11 +39,17 @@
       },
       "hadrian": {
         "environment": "HADRIAN",
-        "status": "NOT_EXECUTED"
+        "status": "SUCCESS",
+        "events": [],
+        "state": {},
+        "gasUsed": "10001",
+        "returnValue": "0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d"
       },
-      "classification": "BLOCKED",
+      "classification": "COMPATIBLE",
       "differences": [],
-      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "Hadrian deployment/call receipts, calldata, deployed bytecode, event and readback were rechecked against RPC; sender role was normalized for OriginHint.",
+      "transactionHash": "0xbd1d9d0504ad17addb81755108741e600743df166f40ca4a0286ff59987a77e3",
+      "contractAddress": "0x02c28c53356D315C6cB526FdDcB5f9eb88065453"
     },
     {
       "testId": "LaneProbe",
@@ -102,16 +114,31 @@
       },
       "hadrian": {
         "environment": "HADRIAN",
-        "status": "NOT_EXECUTED"
+        "status": "SUCCESS",
+        "events": [
+          {
+            "name": "Incremented",
+            "args": {
+              "value": "1"
+            }
+          }
+        ],
+        "state": {
+          "count": "1"
+        },
+        "gasUsed": "1056481",
+        "returnValue": "1"
       },
-      "classification": "BLOCKED",
+      "classification": "COMPATIBLE",
       "differences": [],
-      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "Hadrian deployment/call receipts, calldata, deployed bytecode, event and readback were rechecked against RPC; sender role was normalized for OriginHint.",
+      "transactionHash": "0x5f8fbbdaeb2d6548c07997ce5ab2f52c09d30594f9f9b58530e09af1f8c5cc11",
+      "contractAddress": "0xD8c9c6afa24c2Ef6e15F72206d3bEa9980E56b4c"
     }
   ],
   "summary": {
-    "compatible": 1,
+    "compatible": 4,
     "divergent": 0,
-    "blocked": 3
+    "blocked": 0
   }
 }

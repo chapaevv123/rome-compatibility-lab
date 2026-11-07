@@ -2,5 +2,12 @@
   "version": 1,
   "chainId": 200010,
   "sender": "0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d",
-  "hashes": {}
+  "hashes": {
+    "deploy:Clean": "0xb12880effd697f78811e2cf814e9451ee8f38fed1a4b5ff05ef54790bbc1508c",
+    "deploy:OriginHint": "0x9d23e2096edbb1f9737f214076e18ba70e438f0a0f044947b9c46abb18301589",
+    "deploy:Counter": "0xdd30fc0cfbb1183fef60a5297f9c2162a91f8579efe8b99153afcc4b0808843f",
+    "call:Clean": "0x39a9e0664b7d23b41d870d6ee12d29024f2e7ee7e357af89cafe96e8909d3d68",
+    "call:OriginHint": "0xbd1d9d0504ad17addb81755108741e600743df166f40ca4a0286ff59987a77e3",
+    "call:Counter": "0x5f8fbbdaeb2d6548c07997ce5ab2f52c09d30594f9f9b58530e09af1f8c5cc11"
+  }
 }
