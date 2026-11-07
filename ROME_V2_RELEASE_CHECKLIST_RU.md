@@ -11,7 +11,7 @@
 
 ## Перед новым production release
 
-- [ ] Целевые unit, differential/regression, typecheck, lint, build и E2E проходят локально.
+- [x] Целевые unit, differential/regression, typecheck, lint, build, E2E, оба npm audit, probe/CPI preparation и CLI прошли локально: unit 54/54, E2E 9/9 с exit code 0 против локального production build, свежий RPC differential и regression без новых расхождений.
 - [ ] Полная обязательная CI-матрица проходит на новом commit в релизной ветке.
 - [ ] Владелец подтверждает новый production deployment изменённой функциональности.
 - [ ] После публикации проверены фактический production SHA, страницы, browser journey, API и live evidence.
@@ -23,4 +23,4 @@
 - [ ] Готовое видео записано, проверено и опубликовано владельцем; его URL внесён в Arena draft.
 - [ ] Владелец сверил поля Arena, связал контракты и лично отправил заявку. Грант или отбор не гарантированы.
 
-План: [`evidence/unsigned-differential-plan.json`](evidence/unsigned-differential-plan.json). В нём точные creation bytecode и calldata, но predicted addresses зависят от nonce. Read-only оценка на блоке 519617431: только верхние лимиты трёх deployment — `2.008043189153510100` test USDC при балансе `1.734611224783532832` test USDC. Вызовы и изменение цены газа сюда не включены. Перед любой отправкой нужны новые оценки, достаточный баланс и отдельное ручное подтверждение MetaMask. Приватные ключи в приложение или чат не вводить.
+План: [`evidence/unsigned-differential-plan.json`](evidence/unsigned-differential-plan.json). В нём точные creation bytecode и calldata, но predicted addresses зависят от nonce. Read-only оценка на блоке 519626471: только верхние лимиты трёх deployment — `2.009454951568260600` test USDC при балансе `1.734611224783532832` test USDC; дефицит уже `0.274843726784727768` test USDC без трёх вызовов. Всего нужны шесть отдельных MetaMask подтверждений: deploy + call для Clean, OriginHint и Counter. Вызовы и изменение цены газа в оценку не включены. Перед любой отправкой нужны новые оценки, достаточный баланс и отдельное ручное подтверждение MetaMask. Приватные ключи в приложение или чат не вводить.

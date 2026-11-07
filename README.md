@@ -11,6 +11,8 @@ Rome Compatibility Lab is a source-aware Solidity compatibility preflight for Ro
 - The separate [current differential](evidence/live-differential.json) compares the local LaneProbe execution with its matching Hadrian transaction. Sender identity, block number and timestamp are normalized; gas and Solana CU are separate metrics. That scenario is `COMPATIBLE`. `Clean`, `OriginHint` and `Counter` are `BLOCKED`: no corresponding Hadrian deployment and call receipts exist. No divergence is claimed for them.
 - The [unsigned plan](evidence/unsigned-differential-plan.json) contains pinned source/bytecode hashes, deployment creation data, call calldata, predicted addresses and read-only deployment gas estimates. Predicted addresses depend on the account nonce and transaction order. Call gas and the complete budget require fresh estimates after deployment. The planner never signs or sends.
 
+The latest read-only differential check was at `2026-11-07T10:14:32.211Z`. The unsigned deployment estimate at block `519626471` is `2.009454951568260600` test USDC against a `1.734611224783532832` balance, before three call transactions. Six separate MetaMask approvals and sufficient testnet funds are needed to complete all four comparisons; no new transaction is authorized by this plan.
+
 ## Run and reproduce
 
 Use Node.js 22 and npm. On Windows PowerShell use `npm.cmd`.
@@ -49,6 +51,8 @@ npm run evm:local -- .tmp/local-execution-current.json
 npm run build
 npm run test:e2e
 ```
+
+On Windows, if Playwright's managed Next.js dev server does not exit after tests, start the built app with `npm.cmd run start -- --hostname 127.0.0.1 --port 3100`, then run `$env:E2E_EXTERNAL_SERVER='1'; $env:E2E_PORT='3100'; npm.cmd run test:e2e` in a second PowerShell. This mode ran all nine tests with exit code 0; stop the local server afterward.
 
 The hosted API can be enabled only with server-side Upstash Redis quota, a Vercel WAF rule and the documented environment flags; see [`ROME_RELEASE_CHECKLIST_RU.md`](ROME_RELEASE_CHECKLIST_RU.md). Browser scanning never sends source to that API. The repository contains no private keys or seed. The completed MetaMask page is read-only. Rome registry `v0.3.0` and integrity-checked `solc@0.8.24` are pinned. Source is [MIT licensed](LICENSE); bundled third-party notices are in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 

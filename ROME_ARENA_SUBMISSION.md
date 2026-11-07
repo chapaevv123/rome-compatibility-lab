@@ -12,7 +12,7 @@ Status: production verified on 7 November 2026 at commit `1abb4ee9b9c791004d243d
 
 **GitHub (released source branch):** https://github.com/chapaevv123/rome-compatibility-lab/tree/feat/rome-compatibility-lab-v2
 
-**Differential status:** LaneProbe `COMPATIBLE` in the local release candidate; Clean, OriginHint and Counter `BLOCKED`. Do not describe this as a production feature until the new commit passes CI and is separately deployed.
+**Differential status:** LaneProbe `COMPATIBLE` in the local release candidate, rechecked against public RPC on 7 November 2026; Clean, OriginHint and Counter `BLOCKED`. Their six deployment/call transactions require owner action and sufficient testnet funds. Do not describe the new differential as a production feature until the new commit passes CI and is separately deployed. The video link is pending; this draft has not been submitted.
 
 **Hadrian evidence:** [LaneProbe deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x76d3a3383926b2d0e6c7953fd28c1a3472ef655a3d5ad9c046b383428ae58004), [observe()](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xdcf513ed4e530c8eeb21b6d86157b7e2066f0905d8ffe16504d6feef05b6467f), [CPI deployment](https://via-hadrian.testnet.romeprotocol.xyz/tx/0xac5555d6a67f9995b215ed0e473c6c2cc4bde61149acad239b0714a20a19e946), [invokeMemo()](https://via-hadrian.testnet.romeprotocol.xyz/tx/0x89c4c377b49d24d2aeb9753747505bd3d452703eab305d715da490b297e41845).
 
