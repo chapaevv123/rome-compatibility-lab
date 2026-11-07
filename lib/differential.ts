@@ -1,4 +1,4 @@
-export type Execution = {environment:'LOCAL_EVM'|'HADRIAN'; status:'SUCCESS'|'REVERT'|'NOT_EXECUTED'; returnValue?:string; events?:{name:string;args:unknown[]}[]; state?:Record<string,string>; gasUsed?:string; computeUnits?:string; reason?:string};
+export type Execution = {environment:'LOCAL_EVM'|'HADRIAN'; status:'SUCCESS'|'REVERT'|'NOT_EXECUTED'; returnValue?:string; events?:{name:string;args:unknown}[]; state?:Record<string,string>; gasUsed?:string; computeUnits?:string; reason?:string};
 export type DifferentialResult = {classification:'EXPECTED_DIFFERENCE'|'COMPATIBLE'|'BEHAVIORAL_DIVERGENCE'|'INCONCLUSIVE'|'NOT_EXECUTED'; differences:string[]; note:string};
 export function compareExecution(local:Execution,hadrian:Execution,expectedDifferences:string[]=[]):DifferentialResult {
  if(local.environment!=='LOCAL_EVM'||hadrian.environment!=='HADRIAN')throw Error('Expected LOCAL_EVM and HADRIAN records');

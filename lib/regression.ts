@@ -15,3 +15,16 @@ export function compareRuns(baseline:Run,current:Run){
  for(const id of now.keys())if(!old.has(id))changes.push({testId:id,kind:'NEW_TEST',detail:'Scenario added in current run'});
  return {changes,summary:Object.fromEntries(['NEW_FAILURE','RESOLVED','BEHAVIOR_CHANGED','INCONCLUSIVE','CONFIG_CHANGED','NEW_TEST','REMOVED_TEST'].map(kind=>[kind,changes.filter(c=>c.kind===kind).length]))};
 }
+import type {LiveDifferential} from './live-differential';
+export function compareLiveDifferentialRuns(baseline:LiveDifferential,current:LiveDifferential){
+ if(baseline.chainId!==200010||current.chainId!==200010||baseline.rows.length!==4||current.rows.length!==4)throw Error('Invalid live differential run');
+ const old=new Map(baseline.rows.map(row=>[row.testId,row]));
+ const changes:{testId:string;kind:'NEW_DIVERGENCE'|'RESOLVED'|'BEHAVIOR_CHANGED'|'INCONCLUSIVE';detail:string}[]=[];
+ for(const row of current.rows){const prior=old.get(row.testId);if(!prior)throw Error('Scenario set changed');
+  if(row.classification==='BLOCKED'||prior.classification==='BLOCKED'){changes.push({testId:row.testId,kind:'INCONCLUSIVE',detail:'Hadrian execution absent in one or both runs'});continue}
+  if(prior.classification!=='BEHAVIORAL_DIVERGENCE'&&row.classification==='BEHAVIORAL_DIVERGENCE')changes.push({testId:row.testId,kind:'NEW_DIVERGENCE',detail:'New observable mismatch'});
+  else if(prior.classification==='BEHAVIORAL_DIVERGENCE'&&row.classification!=='BEHAVIORAL_DIVERGENCE')changes.push({testId:row.testId,kind:'RESOLVED',detail:'Previously divergent behavior now matches'});
+  else if(prior.classification!==row.classification||prior.transactionHash!==row.transactionHash||JSON.stringify(prior.hadrian)!==JSON.stringify(row.hadrian))changes.push({testId:row.testId,kind:'BEHAVIOR_CHANGED',detail:'Classification, transaction or verified Hadrian behavior changed'});
+ }
+ return {changes,summary:{NEW_DIVERGENCE:changes.filter(x=>x.kind==='NEW_DIVERGENCE').length,RESOLVED:changes.filter(x=>x.kind==='RESOLVED').length,BEHAVIOR_CHANGED:changes.filter(x=>x.kind==='BEHAVIOR_CHANGED').length,INCONCLUSIVE:changes.filter(x=>x.kind==='INCONCLUSIVE').length}};
+}

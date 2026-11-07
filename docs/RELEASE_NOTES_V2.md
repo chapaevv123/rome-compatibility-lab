@@ -9,4 +9,4 @@
 
 Machine-verifiable evidence: `evidence/hadrian-live.json`; reproduce with `npm run evidence:verify`.
 
-Release status: local release candidate. GitHub push, production deployment and public smoke checks require separate owner approval.
+The evidence release at SHA `1abb4ee9b9c791004d243d1069ff9fd6bf87be0c` is live in production and passed public smoke checks on 7 November 2026. The newer live differential work remains local pending a new CI and separate owner approval for production deployment. It reuses LaneProbe's verified receipt; Clean, OriginHint and Counter remain BLOCKED without matching Hadrian transactions.

@@ -1,0 +1,117 @@
+{
+  "checkedAt": "2026-11-07T10:00:57.896Z",
+  "chainId": 200010,
+  "source": "RECORDED_RPC_CHECK",
+  "rows": [
+    {
+      "testId": "Clean",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "5",
+        "events": [],
+        "state": {},
+        "gasUsed": "927"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "BLOCKED",
+      "differences": [],
+      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+    },
+    {
+      "testId": "OriginHint",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "0x1000000000000000000000000000000000000001",
+        "events": [],
+        "state": {},
+        "gasUsed": "357"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "BLOCKED",
+      "differences": [],
+      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+    },
+    {
+      "testId": "LaneProbe",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "0x1000000000000000000000000000000000000001",
+        "events": [
+          {
+            "name": "Observed",
+            "args": {
+              "caller": "0x1000000000000000000000000000000000000001",
+              "blockNumber": "0",
+              "timestamp": "0"
+            }
+          }
+        ],
+        "state": {},
+        "gasUsed": "2048"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "SUCCESS",
+        "returnValue": "0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d",
+        "events": [
+          {
+            "name": "Observed",
+            "args": {
+              "caller": "0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d",
+              "blockNumber": "519444073",
+              "timestamp": "1794002832"
+            }
+          }
+        ],
+        "state": {},
+        "gasUsed": "10001"
+      },
+      "classification": "COMPATIBLE",
+      "differences": [],
+      "reason": "Fresh RPC verified deployment input, call calldata, successful receipts, code, event and readback. Sender role, block number and timestamp were normalized; gas was excluded.",
+      "transactionHash": "0xdcf513ed4e530c8eeb21b6d86157b7e2066f0905d8ffe16504d6feef05b6467f",
+      "contractAddress": "0x1607af4e1da1c06362871443d2e95c367b984efa"
+    },
+    {
+      "testId": "Counter",
+      "local": {
+        "environment": "LOCAL_EVM",
+        "status": "SUCCESS",
+        "returnValue": "1",
+        "events": [
+          {
+            "name": "Incremented",
+            "args": {
+              "value": "1"
+            }
+          }
+        ],
+        "state": {
+          "count": "1"
+        },
+        "gasUsed": "23741"
+      },
+      "hadrian": {
+        "environment": "HADRIAN",
+        "status": "NOT_EXECUTED"
+      },
+      "classification": "BLOCKED",
+      "differences": [],
+      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+    }
+  ],
+  "summary": {
+    "compatible": 1,
+    "divergent": 0,
+    "blocked": 3
+  }
+}

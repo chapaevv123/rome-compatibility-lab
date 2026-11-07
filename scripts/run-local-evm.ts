@@ -37,5 +37,7 @@ for(const scenario of cases){
  if(String(returnValue)!==scenario.expected||events.map(event=>event.name).join(',')!==(scenario.event||''))throw Error('Local behavior assertion failed: '+scenario.name);
  records.push({testId:scenario.name,contract:scenario.name,sourceHash:'sha256:'+createHash('sha256').update(source).digest('hex'),bytecodeHash:'sha256:'+createHash('sha256').update(contract.evm.bytecode.object,'hex').digest('hex'),compiler:version,registryVersion:'v0.3.0',local:{environment:'LOCAL_EVM',status:'SUCCESS',returnValue:String(returnValue),events,state:scenario.name==='Counter'?{count:String(returnValue)}:{},gasUsed:String(result.execResult.executionGasUsed)},hadrian:{environment:'HADRIAN',status:'NOT_EXECUTED'},classification:'NOT_EXECUTED'});
 }
-writeFileSync('evidence/local-execution.json',JSON.stringify({status:'LOCAL_VERIFIED',generatedAt:new Date().toISOString(),records},null,2));
+const outputPath=process.argv[2]??'evidence/local-execution.json';
+if(process.argv.length>3)throw Error('Usage: run-local-evm.ts [output.json]');
+writeFileSync(outputPath,JSON.stringify({status:'LOCAL_VERIFIED',generatedAt:new Date().toISOString(),records},null,2));
 console.log(`LOCAL_VERIFIED: ${records.length} contracts executed in an in-memory EVM; Hadrian NOT_EXECUTED`);
