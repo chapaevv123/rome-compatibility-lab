@@ -2,12 +2,16 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import planJson from '../evidence/unsigned-differential-plan.json';
 import {DEPLOYER,type WalletProvider} from '../app/hadrian/metamask/flow';
-import {assertDifferentialPlan,quoteDifferentialStep,sendDifferentialStep,verifyDifferentialStep,type DifferentialPlan} from '../lib/differential-operations';
+import {assertDifferentialPlan,numeric,quoteDifferentialStep,sendDifferentialStep,verifyDifferentialStep,type DifferentialPlan} from '../lib/differential-operations';
 import {parseDifferentialHashes} from '../lib/differential-record';
 import {encodeAbiParameters,encodeEventTopics} from 'viem';
 
 const plan=planJson as DifferentialPlan;
 const txHash=`0x${'ab'.repeat(32)}` as const;
+test('pending nonce accepts JSON-RPC, EIP-1193 and viem quantities without weakening validation',()=>{
+  for(const value of ['0x4','4',4,4n])assert.equal(numeric(value,'pending nonce'),4n);
+  for(const value of [4.5,-1,-1n,'-1','04','0x4garbage','',null,{},Number.MAX_SAFE_INTEGER+1])assert.throws(()=>numeric(value,'pending nonce'),/Invalid pending nonce/);
+});
 function wallet(change:Record<string,unknown>={}){
   const calls:string[]=[];let sent:unknown=null;
   const provider:WalletProvider={isMetaMask:true,request:async({method,params})=>{
@@ -30,6 +34,7 @@ test('pinned plan accepts exact creation, runtime and call data; rejects tamperi
 test('quote is read-only and rejects wrong chain, nonce, occupied address and insufficient balance',async()=>{
   const good=wallet();const quote=await quoteDifferentialStep(good.provider,plan,'deploy:Clean',{});
   assert.equal(quote.nonce,4n);assert.equal(good.calls.includes('eth_sendTransaction'),false);
+  for(const nonce of [4,4n,'4'])assert.equal((await quoteDifferentialStep(wallet({eth_getTransactionCount:nonce}).provider,plan,'deploy:Clean',{})).nonce,4n);
   for(const [key,value,pattern] of [['eth_chainId','0x1',/Hadrian/],['eth_getTransactionCount','0x5',/nonce changed/],['eth_getCode','0x6000',/already exists/],['eth_getBalance','0x1',/Insufficient balance/]] as const){
     const invalid=wallet({[key]:value});await assert.rejects(quoteDifferentialStep(invalid.provider,plan,'deploy:Clean',{}),pattern);assert.equal(invalid.calls.includes('eth_sendTransaction'),false);
   }

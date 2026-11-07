@@ -14,7 +14,7 @@ test('local differential quote is read-only until owner confirms',async({page})=
     (window as Window&{ethereum?:unknown;differentialSendCount?:number}).differentialSendCount=0;
     (window as Window&{ethereum?:unknown}).ethereum={isMetaMask:true,request:async({method}:{method:string})=>{
       if(method==='eth_sendTransaction'){(window as Window&{differentialSendCount?:number}).differentialSendCount!++;throw Error('Unexpected send')}
-      const values:Record<string,unknown>={eth_requestAccounts:[address],eth_accounts:[address],eth_chainId:'0x30d4a',eth_getTransactionCount:'0x4',eth_getBalance:'0xa2d12ad75f1c8400',eth_getCode:'0x',eth_estimateGas:'0x3553c1',eth_gasPrice:'0x27b7000000',eth_getBlockByNumber:{baseFeePerGas:'0x27b7000000'},eth_maxPriorityFeePerGas:'0x0'};
+      const values:Record<string,unknown>={eth_requestAccounts:[address],eth_accounts:[address],eth_chainId:'0x30d4a',eth_getTransactionCount:4n,eth_getBalance:'0xa2d12ad75f1c8400',eth_getCode:'0x',eth_estimateGas:'0x3553c1',eth_gasPrice:'0x27b7000000',eth_getBlockByNumber:{baseFeePerGas:'0x27b7000000'},eth_maxPriorityFeePerGas:'0x0'};
       if(!(method in values))throw Error(`Unexpected ${method}`);return values[method];
     }};
   });
@@ -23,5 +23,28 @@ test('local differential quote is read-only until owner confirms',async({page})=
   await page.getByRole('button',{name:'Refresh estimate'}).click();
   await expect(page.getByText(/Max fee per gas/)).toBeVisible();
   await expect(page.getByRole('button',{name:'Confirm in MetaMask: deploy:Clean'})).toBeDisabled();
+  expect(await page.evaluate(()=>(window as Window&{differentialSendCount?:number}).differentialSendCount)).toBe(0);
+});
+test('pending hash survives reload and blocks a second deployment',async({page})=>{
+  await page.addInitScript(()=>{
+    const address='0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d';
+    localStorage.setItem('rome-lab-differential-v1',JSON.stringify({version:1,chainId:200010,sender:address,hashes:{'deploy:Clean':`0x${'ab'.repeat(32)}`}}));
+    (window as Window&{ethereum?:unknown;differentialSendCount?:number}).differentialSendCount=0;
+    (window as Window&{ethereum?:unknown}).ethereum={isMetaMask:true,request:async({method}:{method:string})=>{
+      if(method==='eth_sendTransaction'){(window as Window&{differentialSendCount?:number}).differentialSendCount!++;throw Error('Unexpected send')}
+      if(method==='eth_requestAccounts'||method==='eth_accounts')return [address];
+      if(method==='eth_chainId')return '0x30d4a';
+      if(method==='eth_getTransactionReceipt'||method==='eth_getTransactionByHash')return null;
+      throw Error(`Unexpected ${method}`);
+    }};
+  });
+  await page.goto('/hadrian/metamask');
+  await page.getByRole('button',{name:'Connect MetaMask'}).click();
+  await expect(page.getByText(/Submitted, awaiting receipt/)).toBeVisible();
+  await expect(page.getByRole('button',{name:'Refresh estimate'})).toHaveCount(0);
+  await page.reload();
+  await page.getByRole('button',{name:'Connect MetaMask'}).click();
+  await expect(page.getByText(/Submitted, awaiting receipt/)).toBeVisible();
+  await expect(page.getByRole('button',{name:/Confirm in MetaMask/})).toHaveCount(0);
   expect(await page.evaluate(()=>(window as Window&{differentialSendCount?:number}).differentialSendCount)).toBe(0);
 });

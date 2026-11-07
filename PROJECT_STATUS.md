@@ -14,4 +14,6 @@
 
 **Local manual interface check:** targeted differential/operation/regression tests, typecheck, lint and production build passed. The local browser check showed the six cards, verified explicit wallet connection and read-only fee quoting without a send request. The owner still needs to use MetaMask for each transaction; only real verified receipts can advance the evidence.
 
+**7 November local blocker repair:** wallet quantity parsing now accepts strict hex, decimal, safe integer and bigint forms while preserving the exact nonce comparison. The development-only evidence API treats `localhost` and `127.0.0.1` on the same port as equivalent loopback origins. A local browser run with a simulated read-only wallet checked nonce 4, rechecked the existing public LaneProbe receipt through real RPC, saved the recorded differential snapshot and recovered after reload; no differential transaction was sent. A new differential receipt save remains unverified until the owner submits one in MetaMask.
+
 **Source of original scope:** no `AGENTS.md`, `PROJECT_STATUS.md` or standalone original ТЗ file existed in this repository at the start of this work. Scope was reconstructed from the owner's current request, release checklist, architecture, behavior matrix and existing code. Parent `Pulse/AGENTS.md` was read; the main Pulse project was not changed.

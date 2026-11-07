@@ -4,11 +4,11 @@ import ledger from '../../../../evidence/local-execution.json';
 import {verifyDifferentialHashes,parseDifferentialHashes} from '../../../../lib/differential-record';
 import {assessLiveDifferential,type LocalLedger} from '../../../../lib/live-differential';
 import {verifyReleaseEvidence} from '../../../../lib/release-evidence';
+import {isLocalEvidenceRequest} from '../../../../lib/local-evidence-access';
 
 export const dynamic='force-dynamic';
 export async function POST(request:NextRequest){
-  const url=new URL(request.url);
-  if(process.env.NODE_ENV!=='development'||!['127.0.0.1','localhost'].includes(url.hostname)||request.headers.get('origin')!==url.origin)return NextResponse.json({error:'Local development only'},{status:403});
+  if(!isLocalEvidenceRequest(request.url,request.headers.get('origin'),process.env.NODE_ENV))return NextResponse.json({error:'Local development only'},{status:403});
   try{
     const raw=await request.json();const hashes=parseDifferentialHashes(raw);
     const verified=await verifyDifferentialHashes(hashes);

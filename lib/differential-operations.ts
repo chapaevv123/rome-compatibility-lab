@@ -15,7 +15,12 @@ export type StepQuote={step:DifferentialStep;nonce:bigint;balance:bigint;estimat
 export type VerifiedStep={step:DifferentialStep;hash:Hex;contract:Hex;blockNumber:string;gasUsed:string;actualFeeWei:string;execution?:Execution};
 
 const lower=(value:unknown)=>String(value).toLowerCase();
-const numeric=(value:unknown,label:string)=>{if(typeof value!=='string'||!/^0x[0-9a-f]+$/i.test(value))throw Error(`Invalid ${label}`);return BigInt(value)};
+export const numeric=(value:unknown,label:string):bigint=>{
+  if(typeof value==='bigint'&&value>=0n)return value;
+  if(typeof value==='number'&&Number.isSafeInteger(value)&&value>=0)return BigInt(value);
+  if(typeof value==='string'&&(/^0x[0-9a-f]+$/i.test(value)||/^(0|[1-9][0-9]*)$/.test(value)))return BigInt(value);
+  throw Error(`Invalid ${label}`);
+};
 const addr=(value:unknown):value is Hex=>typeof value==='string'&&/^0x[0-9a-f]{40}$/i.test(value);
 const hash=(value:unknown):value is Hex=>typeof value==='string'&&/^0x[0-9a-f]{64}$/i.test(value);
 const toHex=(value:bigint)=>`0x${value.toString(16)}` as Hex;
