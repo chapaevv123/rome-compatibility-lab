@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T10:14:32.211Z",
+  "checkedAt": "2026-11-07T10:57:18.142Z",
   "chainId": 200010,
   "source": "RECORDED_RPC_CHECK",
   "rows": [
@@ -19,7 +19,7 @@
       },
       "classification": "BLOCKED",
       "differences": [],
-      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
     },
     {
       "testId": "OriginHint",
@@ -37,7 +37,7 @@
       },
       "classification": "BLOCKED",
       "differences": [],
-      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
     },
     {
       "testId": "LaneProbe",
@@ -106,7 +106,7 @@
       },
       "classification": "BLOCKED",
       "differences": [],
-      "reason": "No corresponding Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
+      "reason": "No complete verified Hadrian deployment and call receipts. See unsigned transaction plan; no result is inferred from local EVM."
     }
   ],
   "summary": {

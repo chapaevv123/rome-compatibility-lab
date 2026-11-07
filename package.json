@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --require ./scripts/tsx-userinfo.cjs --import tsx --test tests/scanner.test.ts tests/github.test.ts tests/security.test.ts tests/differential.test.ts tests/regression.test.ts tests/live-differential.test.ts tests/rome-sdk-write.test.ts tests/rome-provider.test.ts tests/metamask-lane.test.ts tests/metamask-operations.test.ts",
+    "test": "node --require ./scripts/tsx-userinfo.cjs --import tsx --test tests/scanner.test.ts tests/github.test.ts tests/security.test.ts tests/differential.test.ts tests/regression.test.ts tests/live-differential.test.ts tests/differential-operations.test.ts tests/rome-sdk-write.test.ts tests/rome-provider.test.ts tests/metamask-lane.test.ts tests/metamask-operations.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit --noUnusedLocals --noUnusedParameters",
     "cli": "node --require ./scripts/tsx-userinfo.cjs --import tsx cli/index.ts",

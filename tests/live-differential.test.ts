@@ -6,6 +6,7 @@ import {assessLiveDifferential,type LocalLedger} from '../lib/live-differential'
 import type {ReleaseEvidence} from '../lib/release-evidence';
 import {DEPLOYER,type WalletProvider} from '../app/hadrian/metamask/flow';
 import {LANE_ADDRESS,LANE_DEPLOY_HASH,verifyOperation} from '../app/hadrian/metamask/operations';
+import type {VerifiedStep,DifferentialStep} from '../lib/differential-operations';
 
 const clone=()=>structuredClone(evidence) as ReleaseEvidence;
 const ledger=local as LocalLedger;
@@ -14,6 +15,19 @@ test('only matching LaneProbe is comparable; other scenarios stay blocked',()=>{
   assert.deepEqual(result.summary,{compatible:1,divergent:0,blocked:3});
   assert.equal(result.rows.find(row=>row.testId==='LaneProbe')?.classification,'COMPATIBLE');
   for(const id of ['Clean','OriginHint','Counter'])assert.equal(result.rows.find(row=>row.testId===id)?.hadrian.status,'NOT_EXECUTED');
+});
+test('verified receipt pairs compare all four scenarios with sender normalization',()=>{
+  const verified:Partial<Record<DifferentialStep,VerifiedStep>>={};
+  for(const [index,id] of (['Clean','OriginHint','Counter'] as const).entries()){
+    const contract=`0x${String(index+1).repeat(40)}` as `0x${string}`;
+    verified[`deploy:${id}`]={step:`deploy:${id}`,hash:`0x${String(index+1).repeat(64)}`,contract,blockNumber:'10',gasUsed:'1',actualFeeWei:'1'};
+    const localRow=ledger.records.find(row=>row.testId===id)!;
+    verified[`call:${id}`]={step:`call:${id}`,hash:`0x${String(index+4).repeat(64)}`,contract,blockNumber:'11',gasUsed:'1',actualFeeWei:'1',execution:{...localRow.local,environment:'HADRIAN',returnValue:id==='OriginHint'?DEPLOYER:localRow.local.returnValue}};
+  }
+  const result=assessLiveDifferential(ledger,clone(),'FRESH_RPC',verified);
+  assert.deepEqual(result.summary,{compatible:4,divergent:0,blocked:0});
+  verified['call:Clean']!.execution!.returnValue='6';
+  assert.equal(assessLiveDifferential(ledger,clone(),'FRESH_RPC',verified).rows[0].classification,'BEHAVIORAL_DIVERGENCE');
 });
 test('wrong chain ID is rejected',()=>{const data=clone();data.chainId=1;assert.throws(()=>assessLiveDifferential(ledger,data),/chain ID/)});
 test('failed receipt cannot be reused as verified',()=>{const data=clone();data.cases[1].receiptStatus='REVERT' as 'SUCCESS';assert.throws(()=>assessLiveDifferential(ledger,data),/evidence mismatch/)});
