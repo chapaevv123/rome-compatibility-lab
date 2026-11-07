@@ -1,5 +1,11 @@
 # Rome Compatibility Lab 2.0
 
+## Start here
+
+For Solidity/EVM developers targeting Rome, the browser scanner gives a source preflight; static findings alone do not guarantee equivalent execution. The [Overview](https://rome-compatibility-lab.vercel.app) guides a four-step journey: scan the exact LaneProbe sample, review its finding, inspect four local EVM/Hadrian differential cases, and open the Hadrian/Solana transaction proofs. The linked LaneProbe example appears only when the scanned source SHA-256 matches the pinned probe source. It is evidence for that tested scenario under normalized conditions, not verification of arbitrary user code.
+
+The local release candidate adds live/recorded/stale proof labels and a collapsed archive for the earlier `NOT_EXECUTED` run. The public URL may still serve the preceding release until the owner authorizes push and deployment; consult [project status](PROJECT_STATUS.md) for the local candidate and exact checks.
+
 [Public product](https://rome-compatibility-lab.vercel.app) · [Live evidence](evidence/hadrian-live.json) · [Release status](PROJECT_STATUS.md) · [Security policy](SECURITY.md)
 
 Rome Compatibility Lab is a source-aware Solidity compatibility preflight for Rome. It reports file and line, confidence, source and remediation for documented Rome constraints. It is not a security audit or a proof that arbitrary Solidity will behave identically on Rome. The public scanner runs locally in the browser. `POST /api/scan` is intentionally disabled until a shared quota and WAF are configured; it returns `503`.

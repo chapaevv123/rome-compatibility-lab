@@ -24,6 +24,7 @@ test('completed differential operations cannot be sent on page load',async({page
   expect(await page.evaluate(()=>(window as Window&{differentialSendCount?:number}).differentialSendCount)).toBe(0);
 });
 test('pending hash survives reload and blocks a second deployment',async({page})=>{
+  test.skip(!!process.env.E2E_EXTERNAL_SERVER,'Production build intentionally has no wallet console');
   await page.addInitScript(()=>{
     const address='0x765fb7e6a0BdDDc29f57eeCE34AEda0Fb318805d';
     localStorage.setItem('rome-lab-differential-v1',JSON.stringify({version:1,chainId:200010,sender:address,hashes:{'deploy:Clean':`0x${'ab'.repeat(32)}`}}));

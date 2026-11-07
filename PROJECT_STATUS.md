@@ -1,11 +1,21 @@
 # Project status — 7 November 2026
 
-**Candidate:** local branch `feat/rome-compatibility-lab-v2`; last confirmed production SHA is `1abb4ee9b9c791004d243d1069ff9fd6bf87be0c`; the current site returns HTTP 200 and `/api/differential/live` returns 404, so this local candidate is not published. GitHub push, main merge, Vercel deployment and Arena submission are pending.
+**Release candidate:** `feat/rome-compatibility-lab-v2`, prepared locally from `abb4fb82a1bfd49f0313dffa754ffd1797411950`. Push, merge, Vercel production deployment and Arena submission have not been performed in this completion pass. The currently deployed source SHA has not been re-established by this local build.
 
-**Differential:** `npm.cmd run differential:verify` independently rechecked six owner-sent transactions through Hadrian RPC at `2026-11-07T12:35:36.837Z`. Clean, OriginHint, LaneProbe and Counter are `COMPATIBLE`; divergent 0, blocked 0. The verifier checks chain, sender, nonce, transaction input, receipt, deployment bytecode, event and readback against pinned plan and local EVM. Hashes, contracts and results: [recorded evidence](evidence/live-differential.json), [six hashes](evidence/differential-transactions.json). Recorded snapshots are distinguished from fresh RPC responses in the UI.
+## Verified core
 
-**CPI:** `npm.cmd run evidence:verify` returned `LIVE_VERIFIED`: four Hadrian cases and finalized Solana Devnet Memo with exact `Rome Compatibility Lab CPI-MEMO-01` payload. [Evidence](evidence/hadrian-live.json). This is a separate proof from four differential cases.
+- The Solidity AST scanner, file/line report, JSON/Markdown export, four local EVM scenarios, regression engine and production read-only controls remain intact.
+- Read-only `npm run differential:verify` passed at `2026-11-07T18:31:51.336Z`: Clean, OriginHint, LaneProbe and Counter were `COMPATIBLE`; divergent 0, blocked 0. See [the RPC snapshot](evidence/live-differential.json). These four tests use declared normalization; gas parity and arbitrary Solidity compatibility are not claimed.
+- Read-only `npm run evidence:verify` passed at `2026-11-07T18:32:04.729Z`: four Hadrian operations and the finalized Solana Devnet inner Memo instruction with exact payload `Rome Compatibility Lab CPI-MEMO-01`. See [the CPI snapshot](evidence/hadrian-live.json).
 
-**Product:** Evidence Explorer and EVM vs Rome show all four cases, contract addresses, hashes, local/Hadrian results, compatibility, explorer links and verification time. Browser scanner is available; public `POST /api/scan` remains disabled without shared quota/WAF. Production transaction controls are absent; local development only has the owner wallet console. Historical local ledger retains its original `NOT_EXECUTED` Hadrian column.
+## Judge experience release candidate
 
-**Release:** See [checklist](ROME_V2_RELEASE_CHECKLIST_RU.md). A new commit needs CI, owner-approved push and deployment, production SHA/API/browser verification. Video and Arena registration remain owner actions. No award or grant is claimed. The public Arena page provides no full judging rubric.
+The Overview now identifies the developer audience, problem, scan/execute/verify path, four tested outcomes and public receipts. Four direct Judge Walkthrough links lead to sample scan, report, differential and proof. The preloaded LaneProbe source is byte-identical to the pinned probe; SHA-256 must match before the report shows a related runtime example. Other code receives runtime guidance without inherited proof. EVM vs Rome and Evidence Explorer keep historical `NOT_EXECUTED` in collapsed archive sections. Hadrian Lab and CPI Lab expose real operations, receipt blocks, settlement facts and direct explorer links. History has a labeled fixture comparison; Docs has a browser-first quickstart.
+
+Both live APIs attempt fresh read-only RPC on page load. `FRESH_RPC`, `RECORDED`, `STALE` and `BLOCKED` labels distinguish current checks from saved snapshots. GitHub Import remains unavailable without shared quota and abuse controls; upload, folder and paste remain available. The public scan API still fails closed with `503`.
+
+## Quality gate
+
+`npm test`: 68 pass, exit 0. Typecheck, lint and production build: exit 0. Both npm audits: 0 vulnerabilities, exit 0 after network-enabled retry. Production-build browser E2E: 12 pass, 2 explicit skips, exit 0. Desktop 1440px and mobile 390px screenshots were reviewed; no horizontal overflow on the tested Overview and mobile CPI recovery path. See [judge review](docs/JUDGE_EXPERIENCE_2026-11-07.md) and [release checklist](ROME_V2_RELEASE_CHECKLIST_RU.md).
+
+**Before public release:** owner authorization for push, merge and deployment, then CI and production browser/API verification against the deployed commit. Arena registration and video remain owner actions. No new blockchain transaction was sent.

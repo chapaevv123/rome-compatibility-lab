@@ -1,9 +1,8 @@
-'use client';
-import {useState} from 'react';
 import Link from 'next/link';
 const steps=[
- {title:'Scan a real source',description:'Open the browser scanner, upload a Solidity file or folder, then inspect the exact file and line in the report.',href:'/scan',action:'Open scanner'},
- {title:'Inspect executed local probes',description:'Review four decoded local EVM results with source and bytecode hashes. The historical ledger remains separate from later Hadrian transactions.',href:'/evidence',action:'Open evidence'},
- {title:'Verify the live boundary',description:'Inspect four Hadrian receipts and the mapped, finalized Solana Memo instruction. The planned MetaMask operations are complete.',href:'/hadrian',action:'Open Hadrian lab'},
-] as const;
-export function Walkthrough(){const [index,setIndex]=useState(0);const step=steps[index];return <section className="panel p-7 mt-8" aria-label="Interactive product walkthrough"><p className="accent text-xs tracking-widest">REVIEWER WALKTHROUGH · {index+1} / {steps.length}</p><h2 className="text-2xl font-bold mt-3">{step.title}</h2><p className="muted mt-3 max-w-2xl">{step.description}</p><div className="flex flex-wrap gap-3 mt-6"><button type="button" className="px-4 py-2 rounded-lg border border-[#474b5b] disabled:opacity-40" disabled={index===0} onClick={()=>setIndex(index-1)}>Previous</button><button type="button" className="px-4 py-2 rounded-lg border border-[#474b5b] disabled:opacity-40" disabled={index===steps.length-1} onClick={()=>setIndex(index+1)}>Next step</button><Link href={step.href} className="button">{step.action} →</Link></div></section>}
+  ['STEP 1','Scan sample Solidity','The exact pinned LaneProbe source is preloaded. Run the browser scan.','/scan','Open sample scan'],
+  ['STEP 2','Review compatibility finding','Inspect file, line, confidence and runtime verification guidance.','/report','Open report'],
+  ['STEP 3','Compare local EVM vs Rome','Review four live differential cases and normalized conditions.','/cross-vm','Open comparison'],
+  ['STEP 4','Inspect Hadrian and Solana proofs','Follow transaction receipts and the finalized Memo CPI.','/evidence','Open proofs']
+];
+export function Walkthrough(){return <section className="mt-8" aria-label="Judge Walkthrough"><h2 className="text-2xl font-bold mb-5">Judge Walkthrough</h2><div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">{steps.map(([step,title,description,href,action])=><article className="panel p-6" key={step}><p className="accent text-xs tracking-widest">{step}</p><h3 className="text-lg font-bold mt-3">{title}</h3><p className="muted text-sm mt-3 min-h-16">{description}</p><Link className="accent underline text-sm mt-4 inline-block" href={href}>{action} →</Link></article>)}</div><p className="muted text-sm mt-4">The report is available after running a scan in this browser session.</p></section>}

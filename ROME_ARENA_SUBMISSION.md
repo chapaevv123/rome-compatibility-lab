@@ -1,5 +1,7 @@
 # Rome Arena — submission draft (not submitted)
 
+**Local Judge Experience RC (unpublished):** The first screen now explains the Rome developer use case, shows four tested compatible scenarios with RPC provenance, and offers a four-step walkthrough. An exact SHA-256 match links the built-in LaneProbe scan to its pinned runtime example; arbitrary code is never assigned that proof. Hadrian Lab lists four verified operations, CPI Lab shows the finalized Memo settlement directly, and the earlier local-only `NOT_EXECUTED` ledger is archived separately. Push, production deployment and Arena submission still require owner authorization. Latest local read-only verification timestamps are recorded in [PROJECT_STATUS.md](PROJECT_STATUS.md).
+
 **Name:** Rome Compatibility Lab
 
 **Short description:** A Rome-specific Solidity preflight that pairs explainable source findings with reproducible local EVM execution, four RPC-verified Hadrian comparisons and a separate EVM → Solana Memo CPI proof.

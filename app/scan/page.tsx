@@ -1,11 +1,68 @@
 'use client';
 import {useState} from 'react';
 import type {SourceFile} from '@/lib/scanner';
-const sample=`// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\ncontract LaneProbe {\n    event Observed(address caller, uint256 blockNumber);\n    function observe() external { emit Observed(msg.sender, block.number); }\n}`;
+import {LANE_SAMPLE,LANE_SOURCE_SHA256,matchingLaneSource} from '@/lib/sample-source';
+
 const hostedEnabled=process.env.NEXT_PUBLIC_SCAN_API_ENABLED==='1';
 export default function ScanPage(){
- const [source,setSource]=useState(sample),[name,setName]=useState('LaneProbe.sol'),[project,setProject]=useState<SourceFile[]>([]),[github,setGithub]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState('');
- async function readFiles(list:FileList|null){if(!list)return;try{const selected=Array.from(list).filter(file=>file.name.endsWith('.sol'));if(!selected.length||selected.length>40)throw Error('Choose 1 to 40 Solidity files');const files:SourceFile[]=[];for(const file of selected){if(file.size>100_000)throw Error('Each Solidity file must be under 100 KB');files.push({path:file.webkitRelativePath||file.name,content:new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer())});}setProject(files);setError('');}catch(e){setError(e instanceof Error?e.message:'Invalid project');}}
- async function run(){setBusy(true);setError('');try{let result:unknown;if(github){if(!hostedEnabled)throw Error('GitHub import is unavailable in local demo mode');const response=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({github})});const payload=await response.json();if(!response.ok)throw Error(payload.error||'Scan failed');result=payload;}else{const {scan}=await import('@/lib/scanner');result=scan(project.length?project:[{path:name,content:source}]);}sessionStorage.setItem('rome-report',JSON.stringify(result));location.href='/report';}catch(e){setError(e instanceof Error?e.message:'Scan failed');setBusy(false);}}
- return <><p className="accent text-xs tracking-widest">01 / SOURCE PREFLIGHT</p><h1 className="text-4xl font-bold mt-3">Scan Solidity</h1><p className="muted mt-4 max-w-3xl">Run a source-aware AST preflight in your browser. Select files or a project folder to retain relative paths. Imports are checked for presence, but submitted sources are never compiled here.</p><div className="grid lg:grid-cols-[2fr_1fr] gap-6 mt-8"><div className="panel p-6"><label className="text-sm muted" htmlFor="solidity-file">Upload Solidity files (40 max)</label><input id="solidity-file" aria-label="Upload Solidity file" className="input mt-2 mb-3" type="file" accept=".sol" multiple onChange={e=>void readFiles(e.target.files)}/><label className="text-sm muted" htmlFor="solidity-folder">Or select a Solidity project folder</label><input id="solidity-folder" aria-label="Select Solidity project folder" className="input mt-2 mb-3" type="file" {...{webkitdirectory:''}} onChange={e=>void readFiles(e.target.files)}/><p aria-live="polite" className="muted text-sm mb-5">{project.length?`${project.length} files selected for this scan`:'Editor source will be scanned'}</p><label className="text-sm muted" htmlFor="solidity-name">Filename</label><input id="solidity-name" className="input mt-2 mb-5" value={name} onChange={e=>setName(e.target.value)}/><label className="text-sm muted" htmlFor="solidity-source">Solidity source</label><textarea id="solidity-source" aria-label="Solidity source" className="input mt-2 font-mono text-sm h-80" value={source} onChange={e=>{setSource(e.target.value);setProject([]);}}/><button className="button mt-5" onClick={run} disabled={busy}>{busy?'Scanning…':'Run preflight →'}</button>{error&&<p role="alert" className="text-red-300 mt-4">{error}</p>}</div><aside className="panel p-6 h-fit"><h2 className="font-bold text-xl">Import from GitHub</h2><p className="muted text-sm mt-3 mb-5">{hostedEnabled?'Public repositories only; no scripts run.':'Unavailable until a shared quota is configured.'}</p><input aria-label="GitHub URL" className="input" placeholder="https://github.com/owner/repo" value={github} onChange={e=>setGithub(e.target.value)} disabled={!hostedEnabled}/><div className="border-t border-[#303447] mt-6 pt-6"><p className="accent text-xs tracking-widest">SCOPE</p><p className="muted text-sm mt-3">Findings are review prompts, not a security audit or execution proof.</p></div></aside></div></>;
+  const [source,setSource]=useState(LANE_SAMPLE),[name,setName]=useState('LaneProbe.sol');
+  const [project,setProject]=useState<SourceFile[]>([]),[github,setGithub]=useState('');
+  const [busy,setBusy]=useState(false),[error,setError]=useState('');
+  async function readFiles(list:FileList|null){
+    if(!list)return;
+    try{
+      const selected=Array.from(list).filter(file=>file.name.endsWith('.sol'));
+      if(!selected.length||selected.length>40)throw Error('Choose 1 to 40 Solidity files');
+      const files:SourceFile[]=[];
+      for(const file of selected){
+        if(file.size>100_000)throw Error('Each Solidity file must be under 100 KB');
+        files.push({path:file.webkitRelativePath||file.name,content:new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer())});
+      }
+      setProject(files);setError('');
+    }catch(e){setError(e instanceof Error?e.message:'Invalid project')}
+  }
+  async function run(){
+    setBusy(true);setError('');
+    try{
+      let result:unknown;
+      if(github){
+        if(!hostedEnabled)throw Error('GitHub import is unavailable until shared quota and abuse controls are configured');
+        const response=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({github})});
+        const payload=await response.json();if(!response.ok)throw Error(payload.error||'Scan failed');result=payload;
+      }else{
+        const {scan}=await import('@/lib/scanner');
+        const files=project.length?project:[{path:name,content:source}];
+        const report=scan(files);
+        if(!report.parseErrors.length&&await matchingLaneSource(files))report.sampleSourceHash=LANE_SOURCE_SHA256;
+        result=report;
+      }
+      sessionStorage.setItem('rome-report',JSON.stringify(result));location.href='/report';
+    }catch(e){setError(e instanceof Error?e.message:'Scan failed');setBusy(false)}
+  }
+  return <>
+    <p className="accent text-xs tracking-widest">01 / SOURCE PREFLIGHT</p>
+    <h1 className="text-4xl font-bold mt-3">Scan Solidity</h1>
+    <p className="muted mt-4 max-w-3xl">The exact LaneProbe demo source is preloaded. Select Run preflight to see its finding and linked recorded runtime case. You can also upload .sol files, select a project folder, or paste code. Imports are checked for presence; submitted sources are not compiled here.</p>
+    <div className="grid lg:grid-cols-[2fr_1fr] gap-6 mt-8">
+      <div className="panel p-6">
+        <label className="text-sm muted" htmlFor="solidity-file">Upload Solidity files (40 max)</label>
+        <input id="solidity-file" aria-label="Upload Solidity file" className="input mt-2 mb-3" type="file" accept=".sol" multiple onChange={e=>void readFiles(e.target.files)}/>
+        <label className="text-sm muted" htmlFor="solidity-folder">Or select a Solidity project folder</label>
+        <input id="solidity-folder" aria-label="Select Solidity project folder" className="input mt-2 mb-3" type="file" {...{webkitdirectory:''}} onChange={e=>void readFiles(e.target.files)}/>
+        <p aria-live="polite" className="muted text-sm mb-5">{project.length?`${project.length} files selected for this scan`:'Editor source will be scanned'}</p>
+        <label className="text-sm muted" htmlFor="solidity-name">Filename</label>
+        <input id="solidity-name" className="input mt-2 mb-5" value={name} onChange={e=>setName(e.target.value)}/>
+        <label className="text-sm muted" htmlFor="solidity-source">Solidity source</label>
+        <textarea id="solidity-source" aria-label="Solidity source" className="input mt-2 font-mono text-sm h-80" value={source} onChange={e=>{setSource(e.target.value);setProject([])}}/>
+        <button className="button mt-5" onClick={run} disabled={busy}>{busy?'Scanning…':'Run preflight →'}</button>
+        {error&&<p role="alert" className="text-red-300 mt-4">{error}</p>}
+      </div>
+      <aside className="panel p-6 h-fit">
+        <h2 className="font-bold text-xl">Import from GitHub</h2>
+        <p className="muted text-sm mt-3 mb-5">{hostedEnabled?'Public repositories only; no scripts run.':'Currently unavailable: shared quota and abuse controls are not configured. Use .sol upload, folder selection, or paste source instead.'}</p>
+        {hostedEnabled&&<input aria-label="GitHub URL" className="input" placeholder="https://github.com/owner/repo" value={github} onChange={e=>setGithub(e.target.value)}/>}
+        <div className="border-t border-[#303447] mt-6 pt-6"><p className="accent text-xs tracking-widest">SCOPE</p><p className="muted text-sm mt-3">Findings are review prompts, not a security audit or execution proof.</p></div>
+      </aside>
+    </div>
+  </>;
 }
