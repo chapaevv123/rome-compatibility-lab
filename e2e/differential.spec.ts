@@ -58,8 +58,8 @@ test('History compares both supported JSON formats and explains invalid input',a
   await expect(page.getByText('No comparison yet')).toBeVisible();
   await page.getByRole('button',{name:'Compare runs'}).click();
   await expect(page.getByRole('alert').first()).toContainText('Choose both Baseline and Current');
-  await page.getByLabel('Baseline report').setInputFiles('report.json');
-  await page.getByLabel('Current report').setInputFiles('report.json');
+  await page.getByLabel('Baseline report').setInputFiles('examples/regression-baseline.json');
+  await page.getByLabel('Current report').setInputFiles('examples/regression-baseline.json');
   await page.getByRole('button',{name:'Compare runs'}).click();
   await expect(page.getByText(/New 0 · Resolved 0/)).toBeVisible();
   await page.getByLabel('Baseline report').setInputFiles('evidence/local-execution.json');

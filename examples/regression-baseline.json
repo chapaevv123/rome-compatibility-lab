@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "2026-11-06.3",
+  "generatedAt": "2026-11-07T18:48:26.706Z",
+  "files": 5,
+  "findings": [
+    {
+      "rule": "ROME-CPI-REVIEW",
+      "severity": "info",
+      "confidence": "heuristic",
+      "file": "CpiMemoProbe.sol",
+      "line": 19,
+      "message": "CPI call found; account metas and signer must be reviewed in context.",
+      "recommendation": "Check predeclared account metas, signer PDA, depth and CU in a runtime test.",
+      "source": "https://docs.rome.builders/developer-guides/call-solana-from-evm",
+      "verification": "NEEDS_RUNTIME_VERIFICATION"
+    },
+    {
+      "rule": "EVM-BLOCK-CONTEXT",
+      "severity": "info",
+      "confidence": "heuristic",
+      "file": "LaneProbe.sol",
+      "line": 7,
+      "message": "Behavior depends on block context; compare on both environments.",
+      "recommendation": "Assert ranges or invariants rather than exact block values.",
+      "source": "https://docs.soliditylang.org/en/latest/units-and-global-variables.html",
+      "verification": "NEEDS_RUNTIME_VERIFICATION"
+    },
+    {
+      "rule": "EVM-BLOCK-CONTEXT",
+      "severity": "info",
+      "confidence": "heuristic",
+      "file": "LaneProbe.sol",
+      "line": 7,
+      "message": "Behavior depends on block context; compare on both environments.",
+      "recommendation": "Assert ranges or invariants rather than exact block values.",
+      "source": "https://docs.soliditylang.org/en/latest/units-and-global-variables.html",
+      "verification": "NEEDS_RUNTIME_VERIFICATION"
+    },
+    {
+      "rule": "EVM-TX-ORIGIN",
+      "severity": "medium",
+      "confidence": "heuristic",
+      "file": "OriginHint.sol",
+      "line": 4,
+      "message": "tx.origin can differ from the expected caller identity in multi-lane flows.",
+      "recommendation": "Use msg.sender for authorization; test both EVM and Solana lanes.",
+      "source": "https://github.com/rome-protocol/rome-sdk-ts#calling-a-solana-program-from-your-evm-app-cpi",
+      "verification": "NEEDS_RUNTIME_VERIFICATION"
+    }
+  ],
+  "parseErrors": [],
+  "imports": [
+    {
+      "file": "CpiMemoProbe.sol",
+      "line": 3,
+      "importPath": "../vendor/rome-solidity/interface.sol",
+      "status": "MISSING"
+    }
+  ],
+  "provenance": {
+    "registry": "rome-registry#v0.3.0",
+    "scanner": "@solidity-parser/parser AST"
+  },
+  "status": "LOCAL TEST"
+}

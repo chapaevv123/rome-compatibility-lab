@@ -1,5 +1,7 @@
 # Control examples
 
+`regression-baseline.json` is a versioned scanner fixture generated from the five checked-in `probes/*.sol` files with `npm run cli -- scan probes --out examples/regression-baseline.json`. It exists for the browser History demo and clean-checkout tests. It is a static scanner report, not live or on-chain evidence. The root `report.json` is a locally generated, ignored CLI output and is deliberately not imported by the app.
+
 Run `npm run cli -- scan examples --out example-report.json`. Exit code **1** is expected: the CPI control intentionally has a confirmed high finding. The tool is a Rome compatibility preflight, not a security audit.
 
 | File | Expected result | Why |
